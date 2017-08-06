@@ -24,9 +24,9 @@ class Object
             _type(type),
             _coordinate(Coordinate(x, y)) {}
         virtual ~Object() {};
-        virtual OBJECT_TYPE get_type() {return _type;}
-        std::string get_name() {return _name;}
-        Coordinate get_coordinate() {return _coordinate;}
+        virtual OBJECT_TYPE type() {return _type;}
+        std::string name() {return _name;}
+        Coordinate coordinate() {return _coordinate;}
 
     private:
         std::string _name;

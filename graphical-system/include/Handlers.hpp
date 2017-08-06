@@ -4,10 +4,10 @@
 
 extern "C" {
 
-    void insert_object(MainWindow* window)
+    void insert_object(GtkWidget* widget, MainWindow* window)
     {
-        /* Draw a point. Only for debug */
-        window->insert_point();
+        /* Draw a line. Only for debug */
+        window->insert_line();
     }
 
     void close_window()
@@ -15,8 +15,8 @@ extern "C" {
         /* Close the interface window */
         gtk_main_quit();
     }
-
-    void configure_event(GtkWidget* widget)
+    
+    gboolean configure_event(GtkWidget* widget)
     {
         /* Creates a new surface */
         if(surface)
@@ -30,18 +30,21 @@ extern "C" {
                                         );
 
         /* Creates a cairo context over the surface */
-        cairo_t* cr = cairo_create(surface);
-        cairo_set_source_rgb (cr, 1, 1, 1);
-        cairo_paint (cr);
-        cairo_destroy (cr);
+        cairo_t *cr = cairo_create(surface);
+        cairo_paint(cr);
+        cairo_destroy(cr);
+
+        /* Returning TRUE to avoide another call of the function */
+        return TRUE;
     }
 
-    void draw(GtkWidget* widget, cairo_t* cr)
+    gboolean draw(GtkWidget* widget, cairo_t* cr, MainWindow* main_window)
     {
         /* Redraw a cairo context */
-        cairo_set_source_surface(cr, surface, 0, 0);
-        cairo_paint(cr);
+        main_window->redraw(cr);
+        return FALSE;
     }
+
 
 }
 
