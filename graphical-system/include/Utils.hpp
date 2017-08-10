@@ -13,11 +13,27 @@ static cairo_surface_t* surface = NULL;
 GtkBuilder* builder;
 GtkWidget* _window;
 GtkWidget* _draw_area;
+GtkTextView* _text_view;
 GtkSpinButton* _new_obj_x;
 GtkSpinButton* _new_obj_y;
 ViewPort* _viewport;
 std::list<Object*> _display_file;
 std::vector<Coordinate> _coordinates_storage;
+
+
+/**
+ * Prints a message on the GUI console.
+ */
+void print(const char* message)
+{
+    GtkTextIter end;
+
+    auto buffer = gtk_text_view_get_buffer(_text_view);
+    gtk_text_buffer_get_end_iter(buffer, &end);
+
+    gtk_text_buffer_insert(buffer, &end, message, -1);
+}
+
 
 /* Callbacks */
 extern "C" {
@@ -64,6 +80,7 @@ extern "C" {
         auto coord = Coordinate(x, y);
     
         _coordinates_storage.push_back(coord);
+        print("Coordinate saved.\n");
     }
 
     void add_line(std::string name)
@@ -101,19 +118,18 @@ extern "C" {
                 break;
             case 1:
                 add_point(name);
-                _coordinates_storage.clear();
                 break;
             case 2:
                 add_line(name);
-                _coordinates_storage.clear();
                 break;
             default:
                 add_polygon(name);
-                _coordinates_storage.clear();
                 break;
         }
-    }
 
+        _coordinates_storage.clear();
+        print("Object with created and added to display file.\n");
+    }
 }
 
 #endif // UTILS_HPP

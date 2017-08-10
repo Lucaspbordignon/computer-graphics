@@ -27,7 +27,9 @@ int main(int argc, char** argv)
 
     /* List of the world objects */
     _display_file = std::list<Object*>();
-    
+
+    /* Initializes the text viewer */
+    _text_view = (GtkTextView*)gtk_builder_get_object(GTK_BUILDER(builder), "log_box");
     gtk_builder_connect_signals(GTK_BUILDER(builder), NULL);
     gtk_widget_show_all(_window);
 
