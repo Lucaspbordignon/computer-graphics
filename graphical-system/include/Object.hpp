@@ -11,6 +11,14 @@ enum OBJECT_TYPE
     POINT
 };
 
+enum DIRECTION
+{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+};
+
 class Coordinate
 {
     public:

@@ -23,6 +23,12 @@ int main(int argc, char** argv)
     _zoom_in_btn = (GtkButton*)gtk_builder_get_object(GTK_BUILDER(builder), "zoom_in");
     _zoom_out_btn = (GtkButton*)gtk_builder_get_object(GTK_BUILDER(builder), "zoom_out");
 
+    _move_up_btn = (GtkButton*)gtk_builder_get_object(GTK_BUILDER(builder), "move_up");
+    _move_down_btn = (GtkButton*)gtk_builder_get_object(GTK_BUILDER(builder), "move_down");
+    _move_left_btn = (GtkButton*)gtk_builder_get_object(GTK_BUILDER(builder), "move_left");
+    _move_right_btn = (GtkButton*)gtk_builder_get_object(GTK_BUILDER(builder), "move_right");
+    _step_size = (GtkSpinButton*)gtk_builder_get_object(GTK_BUILDER(builder), "step_size");
+
     _viewport = new ViewPort(0, 0, 500, 500);
 
     /* List of the world objects */

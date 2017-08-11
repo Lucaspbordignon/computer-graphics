@@ -18,6 +18,7 @@ class ViewPort: public Frame
         void draw_object(Object* object, cairo_t* cr);
         void zoom_in();
         void zoom_out();
+        void move(DIRECTION direction, float step_size);
         Coordinate viewport_transform(Coordinate& coord);
 
     private:

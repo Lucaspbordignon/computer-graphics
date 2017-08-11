@@ -16,8 +16,16 @@ GtkWidget* _draw_area;
 GtkTextView* _text_view;
 GtkSpinButton* _new_obj_x;
 GtkSpinButton* _new_obj_y;
+/* Zoom buttons */
 GtkButton* _zoom_in_btn;
 GtkButton* _zoom_out_btn;
+/* Move buttons */
+GtkButton* _move_up_btn;
+GtkButton* _move_down_btn;
+GtkButton* _move_left_btn;
+GtkButton* _move_right_btn;
+GtkSpinButton* _step_size;
+
 ViewPort* _viewport;
 std::list<Object*> _display_file;
 std::vector<Coordinate> _coordinates_storage;
@@ -118,6 +126,31 @@ extern "C" {
     void zoom_out()
     {
         _viewport->zoom_out();
+        gtk_widget_queue_draw(_draw_area);
+    }
+
+    void move_up()
+    {
+        auto value = gtk_spin_button_get_value(_step_size);
+        _viewport->move(UP, value);
+        gtk_widget_queue_draw(_draw_area);
+    }
+
+    void move_down()
+    {
+        _viewport->move(DOWN, gtk_spin_button_get_value(_step_size));
+        gtk_widget_queue_draw(_draw_area);
+    }
+
+    void move_left()
+    {
+        _viewport->move(LEFT, gtk_spin_button_get_value(_step_size));
+        gtk_widget_queue_draw(_draw_area);
+    }
+
+    void move_right()
+    {
+        _viewport->move(RIGHT, gtk_spin_button_get_value(_step_size));
         gtk_widget_queue_draw(_draw_area);
     }
 

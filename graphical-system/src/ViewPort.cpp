@@ -94,16 +94,40 @@ void ViewPort::draw_point(Object* object, cairo_t* cr)
     cairo_fill(cr);
 }
 
-void ViewPort::zoom_in() {
+void ViewPort::zoom_in()
+{
     _window.set_x_max(_window.get_x_max() / 2);
     _window.set_x_min(_window.get_x_min() * 2);
     _window.set_y_max(_window.get_y_max() / 2);
     _window.set_y_min(_window.get_y_min() * 2);
 }
 
-void ViewPort::zoom_out() {
+void ViewPort::zoom_out()
+{
     _window.set_x_max(_window.get_x_max() * 2);
     _window.set_x_min(_window.get_x_min() / 2);
     _window.set_y_max(_window.get_y_max() * 2);
     _window.set_y_min(_window.get_y_min() / 2);
+}
+
+void ViewPort::move(DIRECTION direction, float step_size)
+{
+    switch (direction) {
+        case UP:
+            _window.set_y_max(_window.get_y_max() + step_size);
+            _window.set_y_min(_window.get_y_min() + step_size);
+            break;
+        case DOWN:
+            _window.set_y_max(_window.get_y_max() - step_size);
+            _window.set_y_min(_window.get_y_min() - step_size);
+            break;
+        case LEFT:
+            _window.set_x_max(_window.get_x_max() - step_size);
+            _window.set_x_min(_window.get_x_min() - step_size);
+            break;
+        case RIGHT:
+            _window.set_x_max(_window.get_x_max() + step_size);
+            _window.set_x_min(_window.get_x_min() + step_size);
+            break;
+    }
 }
