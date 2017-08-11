@@ -127,6 +127,8 @@ extern "C" {
                 break;
         }
 
+        /* Invalidates the actual draw to update the draw area */
+        gtk_widget_queue_draw(_draw_area);
         _coordinates_storage.clear();
         print("Object with created and added to display file.\n");
     }
