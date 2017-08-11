@@ -16,6 +16,8 @@ GtkWidget* _draw_area;
 GtkTextView* _text_view;
 GtkSpinButton* _new_obj_x;
 GtkSpinButton* _new_obj_y;
+GtkButton* _zoom_in_btn;
+GtkButton* _zoom_out_btn;
 ViewPort* _viewport;
 std::list<Object*> _display_file;
 std::vector<Coordinate> _coordinates_storage;
@@ -105,6 +107,18 @@ extern "C" {
         auto point = new Point(name, POINT);
         point->add_coordinates(_coordinates_storage[0]);
         _display_file.push_back(point);
+    }
+
+    void zoom_in()
+    {
+        _viewport->zoom_in();
+        gtk_widget_queue_draw(_draw_area);
+    }
+
+    void zoom_out()
+    {
+        _viewport->zoom_out();
+        gtk_widget_queue_draw(_draw_area);
     }
 
     void create_object_button(GtkButton* button, GtkEntry* obj_name)

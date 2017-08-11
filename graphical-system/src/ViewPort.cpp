@@ -1,5 +1,5 @@
 #include "ViewPort.hpp"
-
+#include <iostream>
 
 /**
  * Draws all the objects of a display file on a drawing area. The display file
@@ -54,8 +54,8 @@ Coordinate ViewPort::viewport_transform(Coordinate& coord)
 void ViewPort::draw_line(Object* object, cairo_t* cr)
 {
     auto coordinates = object->coordinate();
-    Coordinate first_coord = coordinates[0];
-    Coordinate second_coord = coordinates[1];
+    Coordinate first_coord = viewport_transform(coordinates[0]);
+    Coordinate second_coord = viewport_transform(coordinates[1]);
 
     cairo_move_to(cr, first_coord.x(), first_coord.y());
     cairo_line_to(cr, second_coord.x(), second_coord.y()); 
@@ -69,11 +69,11 @@ void ViewPort::draw_line(Object* object, cairo_t* cr)
 void ViewPort::draw_polygon(Object* object, cairo_t* cr)
 {
     auto coordinates = object->coordinate();
-    Coordinate first_coord = coordinates[0];
+    Coordinate first_coord = viewport_transform(coordinates[0]);
 
     cairo_move_to(cr, first_coord.x(), first_coord.y());
     for (auto i = 0u; i < coordinates.size(); ++i) {
-        auto actual_coord = coordinates[i];
+        auto actual_coord = viewport_transform(coordinates[i]);
         cairo_line_to(cr, actual_coord.x(), actual_coord.y());
     }
     
@@ -88,8 +88,22 @@ void ViewPort::draw_polygon(Object* object, cairo_t* cr)
 void ViewPort::draw_point(Object* object, cairo_t* cr)
 {
     auto coordinates = object->coordinate();
-    Coordinate first_coord = coordinates[0];
+    Coordinate first_coord = viewport_transform(coordinates[0]);
 
     cairo_arc(cr, first_coord.x(), first_coord.y(), 3, 0, 2*M_PI);
     cairo_fill(cr);
+}
+
+void ViewPort::zoom_in() {
+    _window.set_x_max(_window.get_x_max() / 2);
+    _window.set_x_min(_window.get_x_min() * 2);
+    _window.set_y_max(_window.get_y_max() / 2);
+    _window.set_y_min(_window.get_y_min() * 2);
+}
+
+void ViewPort::zoom_out() {
+    _window.set_x_max(_window.get_x_max() * 2);
+    _window.set_x_min(_window.get_x_min() / 2);
+    _window.set_y_max(_window.get_y_max() * 2);
+    _window.set_y_min(_window.get_y_min() / 2);
 }

@@ -20,10 +20,10 @@ int main(int argc, char** argv)
     /* Initialize the buttons and lists to capture coordinates */
     _new_obj_x = (GtkSpinButton*)gtk_builder_get_object(GTK_BUILDER(builder), "obj_x");
     _new_obj_y = (GtkSpinButton*)gtk_builder_get_object(GTK_BUILDER(builder), "obj_y"); 
+    _zoom_in_btn = (GtkButton*)gtk_builder_get_object(GTK_BUILDER(builder), "zoom_in");
+    _zoom_out_btn = (GtkButton*)gtk_builder_get_object(GTK_BUILDER(builder), "zoom_out");
 
-    _viewport = new ViewPort(0, 0,
-                         gtk_widget_get_allocated_width(_draw_area),
-                         gtk_widget_get_allocated_height(_draw_area)); 
+    _viewport = new ViewPort(0, 0, 500, 500);
 
     /* List of the world objects */
     _display_file = std::list<Object*>();
