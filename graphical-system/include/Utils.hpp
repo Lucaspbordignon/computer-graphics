@@ -16,9 +16,11 @@ GtkWidget* _draw_area;
 GtkTextView* _text_view;
 GtkSpinButton* _new_obj_x;
 GtkSpinButton* _new_obj_y;
+
 /* Zoom buttons */
 GtkButton* _zoom_in_btn;
 GtkButton* _zoom_out_btn;
+
 /* Move buttons */
 GtkButton* _move_up_btn;
 GtkButton* _move_down_btn;
@@ -44,6 +46,34 @@ void print(const char* message)
     gtk_text_buffer_insert(buffer, &end, message, -1);
 }
 
+/**
+ * Given a vector of coordinates and a displacement vector, creates
+ * the right matrices and applies the translations.
+ *
+ */
+void translation_object()
+{}
+
+/** Given 2 multi-dimensional arrays, applies the scalar
+ * product between them.
+ */
+void dot_product(float** matrix_a, float** matrix_b)
+{
+/*
+    // TODO: Written in pseudo-code
+    auto matrix_b_rows = matrix_b.lines;
+    auto matrix_final;
+
+    for (auto i = 0u; i < matrix_a.lines; ++i)
+        for (auto j = 0u; j < matrix_b.cols; ++j) {
+            matrix_final[i][j] = 0;
+            for (auto k = 0u; k < matrix_b_rows; ++k)
+                matrix_final[i][j] += matrix_a[i][k] * matrix_b[k][j];
+        }
+
+    return matrix_final;
+*/
+}
 
 /* Callbacks */
 extern "C" {
