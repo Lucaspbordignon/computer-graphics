@@ -34,3 +34,9 @@
 .vscode/
 graphical-system/main
 *.*~
+*.swp
+Makefile
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+sgi
