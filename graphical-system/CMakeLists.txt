@@ -12,6 +12,7 @@ link_directories(${GTK3_LIBRARY_DIRS})
 
 # Sources
 set(SOURCES main.cpp src/ViewPort.cpp)
+set(CMAKE_BUILD_TYPE Debug)
 
 # General settings
 add_executable(sgi ${SOURCES})

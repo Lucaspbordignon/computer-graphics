@@ -45,6 +45,8 @@ class Object
             {_coordinates.push_back(Coordinate(x, y));}
         virtual void add_coordinates(Coordinate coord) 
             {_coordinates.push_back(coord);}
+        virtual void update_coordinate(Coordinate coord, int pos)
+            {_coordinates[pos] = coord;}
         OBJECT_TYPE type() {return _type;}
         std::string name() {return _name;}
         std::vector<Coordinate> coordinate() {return _coordinates;}

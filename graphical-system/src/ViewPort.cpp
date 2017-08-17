@@ -1,5 +1,5 @@
 #include "ViewPort.hpp"
-#include <iostream>
+#include "Transform.hpp"
 
 /**
  * Draws all the objects of a display file on a drawing area. The display file
@@ -10,8 +10,11 @@ void ViewPort::draw_all_objects(cairo_t* cr, const std::list<Object*>& display_f
     if(display_file.empty())
         return;
 
-    for(auto i = display_file.begin(); i != display_file.end(); ++i)
+    for(auto i = display_file.begin(); i != display_file.end(); ++i){
+        // TODO: This is a test. Remove this function call.
+        translation_2d_object(*i, 10, 10);
         draw_object(*i, cr);
+    }
 }
 
 /**
@@ -42,8 +45,12 @@ Coordinate ViewPort::viewport_transform(Coordinate& coord)
     auto width = _x_max - _x_min;
     auto height = _y_max - _y_min;
 
-    auto x_vp = ((coord.x() - _window.get_x_min()) / (_window.get_x_max() - _window.get_x_min())) * width;
-    auto y_vp = (1 - (coord.y() - _window.get_y_min()) / (_window.get_y_max() - _window.get_y_min())) * height;
+    auto x_vp = ((coord.x() - _window.get_x_min()) / 
+            (_window.get_x_max() - _window.get_x_min())) * width;
+
+    auto y_vp = (1 - (coord.y() - _window.get_y_min()) /
+            (_window.get_y_max() - _window.get_y_min())) * height;
+
     return Coordinate(x_vp, y_vp);
 }
 
