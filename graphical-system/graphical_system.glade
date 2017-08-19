@@ -20,6 +20,14 @@
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
+  <object class="GtkListStore" id="obj_name_list">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+      <!-- column-name Type -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkListStore" id="object_list_store">
     <columns>
       <!-- column-name x -->
@@ -345,28 +353,77 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="object_label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_top">15</property>
-                <property name="margin_bottom">5</property>
-                <property name="label" translatable="yes">&lt;b&gt;Objects&lt;/b&gt;</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">6</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkBox" id="objects_box">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <property name="baseline_position">bottom</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkLabel" id="object_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">15</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Objects&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkTreeView" id="obj_name_view">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="model">obj_name_list</property>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="obj_name">
+                        <property name="resizable">True</property>
+                        <property name="title" translatable="yes">Name</property>
+                        <property name="expand">True</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="cellrenderertext1">
+                            <property name="alignment">right</property>
+                            <property name="editable">True</property>
+                          </object>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="obj_type">
+                        <property name="resizable">True</property>
+                        <property name="title" translatable="yes">Type</property>
+                        <property name="expand">True</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="cellrenderertext2">
+                            <property name="alignment">right</property>
+                            <property name="editable">True</property>
+                          </object>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox" id="name_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_bottom">10</property>
@@ -402,7 +459,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">0</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
@@ -429,7 +486,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">●</property>
-                        <property name="text" translatable="yes">0.000</property>
+                        <property name="text" translatable="yes">0.0</property>
                         <property name="xalign">1</property>
                         <property name="adjustment">adjustment_x_coord</property>
                         <property name="climb_rate">1</property>
@@ -459,7 +516,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">●</property>
-                        <property name="text" translatable="yes">0.000</property>
+                        <property name="text" translatable="yes">0.0</property>
                         <property name="xalign">1</property>
                         <property name="adjustment">adjustment_y_coord</property>
                         <property name="climb_rate">1</property>
@@ -476,30 +533,17 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="add_coordinate_button">
-                    <property name="label" translatable="yes">Add Coordinate</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="margin_bottom">16</property>
-                    <signal name="clicked" handler="add_coordinate" object="obj_x" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkTreeView" id="object_treeview">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
                     <property name="margin_bottom">10</property>
                     <property name="model">object_list_store</property>
+                    <property name="headers_clickable">False</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection"/>
                     </child>
@@ -507,6 +551,7 @@
                       <object class="GtkTreeViewColumn" id="col_obj_x">
                         <property name="resizable">True</property>
                         <property name="title" translatable="yes">x</property>
+                        <property name="expand">True</property>
                         <child>
                           <object class="GtkCellRendererText" id="cellrenderertext3">
                             <property name="alignment">right</property>
@@ -522,6 +567,7 @@
                       <object class="GtkTreeViewColumn" id="col_obj_y">
                         <property name="resizable">True</property>
                         <property name="title" translatable="yes">y</property>
+                        <property name="expand">True</property>
                         <child>
                           <object class="GtkCellRendererText" id="cellrenderertext4">
                             <property name="alignment">right</property>
@@ -537,7 +583,22 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="add_coordinate_button">
+                    <property name="label" translatable="yes">Add Coordinate</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="margin_bottom">10</property>
+                    <signal name="clicked" handler="add_coordinate" object="obj_x" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">5</property>
                   </packing>
                 </child>
                 <child>
@@ -546,12 +607,13 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="margin_bottom">5</property>
                     <signal name="clicked" handler="create_object_button" object="obj_name_entry" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">4</property>
+                    <property name="position">6</property>
                   </packing>
                 </child>
               </object>

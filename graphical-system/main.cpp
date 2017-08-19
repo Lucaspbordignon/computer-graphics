@@ -1,4 +1,3 @@
-#include <gtk/gtk.h>
 #include "Utils.hpp"
 
 
@@ -28,6 +27,11 @@ int main(int argc, char** argv)
     _move_left_btn = (GtkButton*)gtk_builder_get_object(GTK_BUILDER(builder), "move_left");
     _move_right_btn = (GtkButton*)gtk_builder_get_object(GTK_BUILDER(builder), "move_right");
     _step_size = (GtkSpinButton*)gtk_builder_get_object(GTK_BUILDER(builder), "step_size");
+
+    _obj_name_view =(GtkTreeView*)gtk_builder_get_object(GTK_BUILDER(builder), "obj_name_view");
+    _name_list = GTK_LIST_STORE(gtk_tree_view_get_model(_obj_name_view));
+    _obj_coord_view = (GtkTreeView*)gtk_builder_get_object(GTK_BUILDER(builder), "coord_treeview");
+    _coord_list = GTK_LIST_STORE(gtk_tree_view_get_model(_obj_coord_view));
 
     _viewport = new ViewPort(0, 0, 500, 500);
 

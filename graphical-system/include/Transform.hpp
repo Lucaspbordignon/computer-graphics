@@ -2,27 +2,22 @@
 #define TRANSFORMATION_HPP
 
 #include "Object.hpp"
+#include "Matrix.hpp"
 
-typedef std::vector<std::vector<float>> Matrix;
 
 /** 
  * Given 2 multi-dimensional arrays, applies the scalar
  * product between them.
  */
-float** dot_product(const Matrix matrix_a, const Matrix matrix_b)
+Matrix dot_product(const Matrix matrix_a, const Matrix matrix_b)
 {
-    auto matrix_b_rows = matrix_b.size();
-    auto matrix_b_cols = matrix_b.front().size(); 
-    auto matrix_a_lines = matrix_a.size();
-    float** matrix_final;
+    Matrix matrix_final = Matrix(matrix_a.rows(), matrix_b.cols());
 
-    for (auto i = 0u; i < matrix_a_lines; ++i)
-        for (auto j = 0u; j < matrix_b_cols; ++j) {
-            matrix_final[i][j] = 0;
-            for (auto k = 0u; k < matrix_b_rows; ++k) {
+    for (auto i = 0u; i < matrix_a.rows(); ++i)
+        for (auto j = 0u; j < matrix_b.cols(); ++j) 
+            for (auto k = 0u; k < matrix_b.rows(); ++k) {
                 matrix_final[i][j] += matrix_a[i][k] * matrix_b[k][j];
             }
-        }
 
     return matrix_final;
 }
@@ -34,19 +29,32 @@ float** dot_product(const Matrix matrix_a, const Matrix matrix_b)
  */
 void translation_2d_object(Object* obj, float dx, float dy)
 {
-    Matrix tranformation = {
+    Matrix tranformation = Matrix({
         {1, 0, 0},
         {0, 1, 0},
         {dx, dy, 1}
-    };
+    });
 
     for (auto i = 0u; i < obj->coordinate().size(); ++i) {
         auto coord = obj->coordinate()[i];
-        auto coord_matrix = Matrix{{coord.x(), coord.y(), 1.0}};
-        auto transf_coord = dot_product(coord_matrix, tranformation);
-        //obj->update_coordinate(Coordinate(transf_coord[0][0], transf_coord[0][1]), i);
+        auto coord_matrix = Matrix( {{coord.x(), coord.y(), 1.0}} );
+        coord_matrix = dot_product(coord_matrix, tranformation);
+        obj->update_coordinate(Coordinate(coord_matrix[0][0], coord_matrix[0][1]), i);
     }
 }
+
+void scale_2d_object(Object* obj, float sx, float sy)
+{
+    // TODO
+   // Matrix transformation = Matrix({
+   //     {sx, 0, 0},
+   //     {0, sy, 0},
+   //     {0, 0, 1}
+   // });
+}
+
+void rotate_2d_object(Object* obj, float sx, float sy)
+{}
 
 
 #endif // TRANSFORMATION_HPP

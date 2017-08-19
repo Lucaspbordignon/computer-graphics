@@ -2,7 +2,8 @@
 #define UTILS_HPP
 
 #include <list>
-#include <iostream>
+#include <cstring>
+#include <gtk/gtk.h>
 #include "Object.hpp"
 #include "ViewPort.hpp"
 
@@ -29,9 +30,14 @@ GtkButton* _move_left_btn;
 GtkButton* _move_right_btn;
 GtkSpinButton* _step_size;
 
+/* Display widgets */
 ViewPort* _viewport;
 std::list<Object*> _display_file;
 std::vector<Coordinate> _coordinates_storage;
+GtkTreeView* _obj_name_view;
+GtkTreeView* _obj_coord_view;
+GtkListStore* _name_list;
+GtkListStore* _coord_list;
 
 
 /**
@@ -91,9 +97,13 @@ extern "C" {
         auto x = gtk_spin_button_get_value(_new_obj_x);
         auto y = gtk_spin_button_get_value(_new_obj_y);
         auto coord = Coordinate(x, y);
-    
+
         _coordinates_storage.push_back(coord);
-        print("Coordinate saved.\n");
+
+        /* Creates a new entry on the tree view */
+        GtkTreeIter it;
+        gtk_list_store_append(_coord_list, &it);
+        gtk_list_store_set(_coord_list, &it, 0, y, 1, x, -1);
     }
 
     void add_line(std::string name)
@@ -102,6 +112,13 @@ extern "C" {
         auto line = new Line(name, LINE);
         line->add_coordinates(_coordinates_storage);
         _display_file.push_back(line);
+
+        /* Add the element to the list store */
+        char aux[1024];
+        strcpy(aux, name.c_str());
+        GtkTreeIter it;
+        gtk_list_store_append(_name_list, &it);
+        gtk_list_store_set(_name_list, &it, 0, aux, 1, "LINE", -1);
     }
 
     void add_polygon(std::string name)
@@ -110,6 +127,13 @@ extern "C" {
         auto polygon = new Polygon(name, POLYGON);
         polygon->add_coordinates(_coordinates_storage);
         _display_file.push_back(polygon);
+        
+        /* Add the element to the list store */
+        char aux[1024];
+        strcpy(aux, name.c_str());
+        GtkTreeIter it;
+        gtk_list_store_append(_name_list, &it);
+        gtk_list_store_set(_name_list, &it, 0, aux, 1, "POLYGON", -1);
     }
 
     void add_point(std::string name)
@@ -118,6 +142,13 @@ extern "C" {
         auto point = new Point(name, POINT);
         point->add_coordinates(_coordinates_storage[0]);
         _display_file.push_back(point);
+
+        /* Add the element to the list store */
+        char aux[1024];
+        strcpy(aux, name.c_str());
+        GtkTreeIter it;
+        gtk_list_store_append(_name_list, &it);
+        gtk_list_store_set(_name_list, &it, 0, aux, 1, "POINT", -1);
     }
 
     void zoom_in()
@@ -180,6 +211,7 @@ extern "C" {
         /* Invalidates the actual draw to update the draw area */
         gtk_widget_queue_draw(_draw_area);
         _coordinates_storage.clear();
+        gtk_list_store_clear(_coord_list);
         print("Object with created and added to display file.\n");
     }
 }
