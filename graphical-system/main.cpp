@@ -33,7 +33,7 @@ int main(int argc, char** argv)
     _obj_coord_view = (GtkTreeView*)gtk_builder_get_object(GTK_BUILDER(builder), "coord_treeview");
     _coord_list = GTK_LIST_STORE(gtk_tree_view_get_model(_obj_coord_view));
 
-    _viewport = new ViewPort(0, 0, 500, 500);
+    _viewport = new ViewPort(0, 0, 800, 720);
 
     /* List of the world objects */
     _display_file = std::list<Object*>();

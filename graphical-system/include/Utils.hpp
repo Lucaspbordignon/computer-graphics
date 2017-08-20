@@ -46,10 +46,8 @@ GtkListStore* _coord_list;
 void print(const char* message)
 {
     GtkTextIter end;
-
     auto buffer = gtk_text_view_get_buffer(_text_view);
     gtk_text_buffer_get_end_iter(buffer, &end);
-
     gtk_text_buffer_insert(buffer, &end, message, -1);
 }
 

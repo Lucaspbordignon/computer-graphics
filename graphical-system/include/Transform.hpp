@@ -29,7 +29,7 @@ Matrix dot_product(const Matrix matrix_a, const Matrix matrix_b)
  */
 void translation_2d_object(Object* obj, float dx, float dy)
 {
-    Matrix tranformation = Matrix({
+    Matrix transformation = Matrix({
         {1, 0, 0},
         {0, 1, 0},
         {dx, dy, 1}
@@ -38,19 +38,29 @@ void translation_2d_object(Object* obj, float dx, float dy)
     for (auto i = 0u; i < obj->coordinate().size(); ++i) {
         auto coord = obj->coordinate()[i];
         auto coord_matrix = Matrix( {{coord.x(), coord.y(), 1.0}} );
-        coord_matrix = dot_product(coord_matrix, tranformation);
+        coord_matrix = dot_product(coord_matrix, transformation);
         obj->update_coordinate(Coordinate(coord_matrix[0][0], coord_matrix[0][1]), i);
     }
 }
 
+/**
+ * Given an Object and a 2D vector of coordinates to scale,
+ * creates the tranformation matrix and applies it to the object.
+ */
 void scale_2d_object(Object* obj, float sx, float sy)
 {
-    // TODO
-   // Matrix transformation = Matrix({
-   //     {sx, 0, 0},
-   //     {0, sy, 0},
-   //     {0, 0, 1}
-   // });
+    Matrix transformation = Matrix({
+        {sx, 0, 0},
+        {0, sy, 0},
+        {0, 0, 1}
+    });
+
+    for (auto i = 0u; i < obj->coordinate().size(); ++i) {
+        auto coord = obj->coordinate()[i];
+        auto coord_matrix = Matrix( {{coord.x(), coord.y(), 1.0}} );
+        coord_matrix = dot_product(coord_matrix, transformation);
+        obj->update_coordinate(Coordinate(coord_matrix[0][0], coord_matrix[0][1]), i);
+    }
 }
 
 void rotate_2d_object(Object* obj, float sx, float sy)

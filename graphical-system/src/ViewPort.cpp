@@ -1,4 +1,5 @@
 #include "ViewPort.hpp"
+#include "Transform.hpp"
 
 /**
  * Draws all the objects of a display file on a drawing area. The display file
@@ -9,8 +10,10 @@ void ViewPort::draw_all_objects(cairo_t* cr, const std::list<Object*>& display_f
     if(display_file.empty())
         return;
 
-    for(auto i = display_file.begin(); i != display_file.end(); ++i)
+    for(auto i = display_file.begin(); i != display_file.end(); ++i) {
+        scale_2d_object(*i, 2, 2);
         draw_object(*i, cr);
+    }
 }
 
 /**
