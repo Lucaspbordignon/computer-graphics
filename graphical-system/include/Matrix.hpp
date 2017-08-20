@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cstdio>
+#include <cmath>
 
 class Matrix {
     public:
