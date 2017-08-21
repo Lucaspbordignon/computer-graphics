@@ -11,7 +11,7 @@ include_directories(${GTK3_INCLUDE_DIRS})
 link_directories(${GTK3_LIBRARY_DIRS})
 
 # Sources
-set(SOURCES main.cpp src/ViewPort.cpp src/Matrix.cpp)
+set(SOURCES main.cpp src/ViewPort.cpp src/Matrix.cpp src/Object.cpp)
 set(CMAKE_BUILD_TYPE Debug)
 
 # General settings

@@ -101,7 +101,7 @@ extern "C" {
         /* Creates a new entry on the tree view */
         GtkTreeIter it;
         gtk_list_store_append(_coord_list, &it);
-        gtk_list_store_set(_coord_list, &it, 0, y, 1, x, -1);
+        gtk_list_store_set(_coord_list, &it, 0, x, 1, y, -1);
     }
 
     void add_line(std::string name)
@@ -149,6 +149,37 @@ extern "C" {
         gtk_list_store_set(_name_list, &it, 0, aux, 1, "POINT", -1);
     }
 
+    void create_object_button(GtkButton* button, GtkEntry* obj_name)
+    {
+        auto name = gtk_entry_get_text(obj_name);
+        if (name[0] == '\0') {
+            print("Object not added. Insert a name to it!\n");
+            return;
+        }
+
+        /* Detects the number of points and add it */
+        switch(_coordinates_storage.size())
+        {
+            case 0:
+                break;
+            case 1:
+                add_point(name);
+                break;
+            case 2:
+                add_line(name);
+                break;
+            default:
+                add_polygon(name);
+                break;
+        }
+
+        /* Invalidates the actual draw to update the draw area */
+        gtk_widget_queue_draw(_draw_area);
+        _coordinates_storage.clear();
+        gtk_list_store_clear(_coord_list);
+        print("Object with created and added to display file.\n");
+    }
+
     void zoom_in()
     {
         _viewport->zoom_in();
@@ -186,32 +217,6 @@ extern "C" {
         gtk_widget_queue_draw(_draw_area);
     }
 
-    void create_object_button(GtkButton* button, GtkEntry* obj_name)
-    {
-        auto name = gtk_entry_get_text(obj_name);
-
-        /* Detects the number of points and add it */
-        switch(_coordinates_storage.size())
-        {
-            case 0:
-                break;
-            case 1:
-                add_point(name);
-                break;
-            case 2:
-                add_line(name);
-                break;
-            default:
-                add_polygon(name);
-                break;
-        }
-
-        /* Invalidates the actual draw to update the draw area */
-        gtk_widget_queue_draw(_draw_area);
-        _coordinates_storage.clear();
-        gtk_list_store_clear(_coord_list);
-        print("Object with created and added to display file.\n");
-    }
 }
 
 #endif // UTILS_HPP

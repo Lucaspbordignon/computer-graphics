@@ -84,5 +84,36 @@ void rotate_2d_object(Object* obj, float angle)
     }
 }
 
+/**
+ * Given an Object and a certain angle (in degrees), applies a rotation
+ * algorithm on it. The rotation is centered at the point (x, y), so a
+ * translation is made, then the rotation and a translation to the original
+ * point is applied. All is made in a single matrix multiplication.
+ */
+void rotate_2d_object(Object* obj, float angle, float x, float y)
+{
+    // TODO: Fix this. The transformation is not right
+    float ang_in_rad = angle * (M_PI / 180.0);
+    auto cos_angle = std::cos(ang_in_rad);
+    auto sin_angle = std::sin(ang_in_rad);
+
+    for (auto i = 0u; i < obj->coordinate().size(); ++i) {
+        auto coord = obj->coordinate()[i];
+        auto coord_matrix = Matrix( {{coord.x(), coord.y(), 1.0}} );
+
+        auto dx = coord.x() - x;
+        auto dy = coord.y() - y;
+        auto exp_x = (-dx * cos_angle) - (dy * sin_angle) + dx;
+        auto exp_y = (-dx * cos_angle) - (dy * sin_angle) + dx;
+        Matrix transformation = Matrix({
+            {cos_angle, -sin_angle, 0},        
+            {sin_angle, cos_angle, 0},
+            {exp_x, exp_y, 1} 
+        });
+
+        coord_matrix = dot_product(coord_matrix, transformation);
+        obj->update_coordinate(Coordinate(coord_matrix[0][0], coord_matrix[0][1]), i);
+    }
+}
 
 #endif // TRANSFORMATION_HPP
