@@ -34,3 +34,5 @@
 .vscode/
 graphical-system/main
 *.*~
+build/
+sgi

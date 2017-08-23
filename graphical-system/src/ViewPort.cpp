@@ -11,8 +11,8 @@ void ViewPort::draw_all_objects(cairo_t* cr, const std::list<Object*>& display_f
         return;
 
     for(auto i = display_file.begin(); i != display_file.end(); ++i){
-        draw_object(*i, cr);
         rotate_2d_object(*i, 45, 100, 100);
+        draw_object(*i, cr);
     }
 }
 
