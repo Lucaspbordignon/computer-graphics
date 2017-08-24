@@ -24,6 +24,9 @@ class Frame {
         float get_y_max() { return _y_max; }
         void set_y_max(float y_max) { _y_max = y_max; }
 
+        float x_center() { return (_x_min + _x_max)/2; }
+        float y_center() { return (_y_min + _y_max)/2; }
+
     protected:
         float _x_min;
         float _y_min;

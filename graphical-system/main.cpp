@@ -36,7 +36,7 @@ int main(int argc, char** argv)
     _viewport = new ViewPort(0, 0, 800, 720);
 
     /* List of the world objects */
-    _display_file = std::list<Object*>();
+    _display_file = DisplayFile();
 
     /* Initializes the text viewer */
     _text_view = (GtkTextView*)gtk_builder_get_object(GTK_BUILDER(builder), "log_box");
@@ -44,6 +44,7 @@ int main(int argc, char** argv)
     gtk_widget_show_all(_window);
 
     gtk_main();
+    delete _viewport;
 
     return 0;
 }
