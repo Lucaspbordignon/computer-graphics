@@ -6,6 +6,8 @@
 #include <gtk/gtk.h>
 #include "Object.hpp"
 #include "ViewPort.hpp"
+#include "DisplayFile.hpp"
+#include "Transform.hpp"
 
 #define GUI_FILE "graphical_system.glade"
 
@@ -32,7 +34,7 @@ GtkSpinButton* _step_size;
 
 /* Display widgets */
 ViewPort* _viewport;
-std::list<Object*> _display_file;
+DisplayFile _display_file;
 std::vector<Coordinate> _coordinates_storage;
 GtkTreeView* _obj_name_view;
 GtkTreeView* _obj_coord_view;
@@ -215,6 +217,79 @@ extern "C" {
     {
         _viewport->move(RIGHT, gtk_spin_button_get_value(_step_size));
         gtk_widget_queue_draw(_draw_area);
+    }
+
+    void transformation_dialog()
+    {  
+        GtkTreeModel* model;
+        GtkTreeIter it;
+
+        GtkTreeSelection* selection = gtk_tree_view_get_selection(_obj_name_view);
+        if (gtk_tree_selection_get_selected(selection, &model, &it)) {
+            auto transf_dialog = (GtkDialog*)gtk_builder_get_object(
+                                    GTK_BUILDER(builder),
+                                    "transformation_dialog");
+            gtk_dialog_run(GTK_DIALOG(transf_dialog));
+        } else {
+            print("Object not selected. Select one to apply the transform!\n");
+        }
+
+    }
+
+    void apply_transformation(GtkButton* btn, GtkWidget* widget)
+    {
+        GtkTreeModel* model;
+        GtkTreeIter it;
+        Object* obj;
+        float x, y, ang;
+
+        /* Gets the object to be transformed */
+        GtkTreeSelection* selection = gtk_tree_view_get_selection(_obj_name_view);
+        if (gtk_tree_selection_get_selected(selection, &model, &it)) {
+            gchar *name;
+            gtk_tree_model_get(model, &it, 0, &name, -1);
+
+            // Get the object to be called
+            obj = _display_file.get_object(name);
+        }
+
+        /* Gets the transformation options */
+        GtkComboBoxText* combo_box = (GtkComboBoxText*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "transf_select");
+
+        /* Gets the displacement data */
+        auto transf_x = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "transf_x_coord");
+        auto transf_y = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "transf_y_coord");
+        auto transf_ang = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "transf_angle");
+        x = gtk_spin_button_get_value(transf_x);
+        y = gtk_spin_button_get_value(transf_y);
+        ang = gtk_spin_button_get_value(transf_ang);
+
+        auto selected = gtk_combo_box_text_get_active_text(combo_box);
+        if(!strncmp(selected, "Rotate from origin", 24)){
+            rotate_2d_object(obj, ang);
+        } else if(!strncmp(selected, "Rotate from world center", 24)){
+            x = _viewport->window_center_x(); 
+            y = _viewport->window_center_y(); 
+            rotate_2d_object(obj, ang, x, y);
+        } else if(!strncmp(selected, "Rotate from coordinates", 24)){
+            rotate_2d_object(obj, ang, x, y);
+        } else if(!strncmp(selected, "Scaling", 8)){
+            scale_2d_object(obj, x, y);
+        } else if (!strncmp(selected, "Translation", 12)){
+            translation_2d_object(obj, x, y);
+        }
+
+        /* Redraw and close popup */
+        gtk_widget_queue_draw(_draw_area);
+        gtk_widget_hide(widget);
     }
 
 }
