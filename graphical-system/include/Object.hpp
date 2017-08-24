@@ -11,6 +11,12 @@ enum OBJECT_TYPE
     POINT
 };
 
+enum COORDINATE_TYPE
+{
+    WORLD,
+    WINDOW
+};
+
 enum DIRECTION
 {
     UP,
@@ -22,16 +28,19 @@ enum DIRECTION
 class Coordinate
 {
     public:
-        Coordinate(float x, float y):
+        Coordinate(float x, float y, COORDINATE_TYPE type = WORLD):
             _x(x),
-            _y(y) {}
+            _y(y),
+            _type(type) {}
         virtual ~Coordinate() {};
 
         float x() {return _x;}
         float y() {return _y;}
+        COORDINATE_TYPE type() {return _type;}
 
     private:
         float _x, _y;
+        COORDINATE_TYPE type;
 };
 
 class Object
@@ -41,16 +50,18 @@ class Object
             _name(name),
             _type(type) {}
         virtual ~Object() {};
-        virtual void add_coordinates(float x, float y);
-        virtual void add_coordinates(Coordinate coord);
+        virtual void add_coordinates(float x, float y, COORDINATE_TYPE type);
+        virtual void add_corrdinates(Coordinate coord);
         void update_coordinate(Coordinate coord, int pos);
         Coordinate center_point();
         OBJECT_TYPE type() {return _type;}
         std::string name() {return _name;}
-        std::vector<Coordinate> coordinate() {return _coordinates;}
+        std::vector<Coordinate> world_coordinate() {return _world_coordinates;}
+        std::vector<Coordinate> window_coordinate() {return _window_coordinates;}
 
     protected:
-        std::vector<Coordinate> _coordinates;
+        std::vector<Coordinate> _world_coordinates;
+        std::vector<Coordinate> _window_coordinates;
 
     private:
         std::string _name;

@@ -13,7 +13,13 @@ class ViewPort: public Frame
     public:
         ViewPort(float x_min, float y_min, float x_max, float y_max):
             Frame::Frame(x_min, y_min, x_max, y_max),
-            _window(0, 0, 500, 500) {}
+            {
+                _window = Object("window", POLYGON);
+                _window.add_coordinates(-1, -1, WORLD);
+                _window.add_coordinates(-1, 1, WORLD);
+                _window.add_coordinates(1, -1, WORLD);
+                _window.add_coordinates(1, 1, WORLD);
+            }
         void draw_all_objects(cairo_t* cr, const std::list<Object*>&);
         void draw_object(Object* object, cairo_t* cr);
         void zoom_in();
@@ -25,7 +31,7 @@ class ViewPort: public Frame
         void draw_line(Object* object, cairo_t* cr);
         void draw_polygon(Object* object, cairo_t* cr);
         void draw_point(Object* object, cairo_t* cr);
-        Frame _window;
+        Object _window;
 };
 
 #endif // VIEWPORT_HPP
