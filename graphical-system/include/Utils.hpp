@@ -2,11 +2,15 @@
 #define UTILS_HPP
 
 #include <list>
-#include <iostream>
+#include <cstring>
+#include <gtk/gtk.h>
 #include "Object.hpp"
 #include "ViewPort.hpp"
+#include "DisplayFile.hpp"
+#include "Transform.hpp"
 
 #define GUI_FILE "graphical_system.glade"
+
 
 /* Global Variables */
 static cairo_surface_t* surface = NULL;
@@ -28,9 +32,14 @@ GtkButton* _move_left_btn;
 GtkButton* _move_right_btn;
 GtkSpinButton* _step_size;
 
+/* Display widgets */
 ViewPort* _viewport;
-std::list<Object*> _display_file;
+DisplayFile _display_file;
 std::vector<Coordinate> _coordinates_storage;
+GtkTreeView* _obj_name_view;
+GtkTreeView* _obj_coord_view;
+GtkListStore* _name_list;
+GtkListStore* _coord_list;
 
 
 /**
@@ -39,41 +48,11 @@ std::vector<Coordinate> _coordinates_storage;
 void print(const char* message)
 {
     GtkTextIter end;
-
     auto buffer = gtk_text_view_get_buffer(_text_view);
     gtk_text_buffer_get_end_iter(buffer, &end);
-
     gtk_text_buffer_insert(buffer, &end, message, -1);
 }
 
-/**
- * Given a vector of coordinates and a displacement vector, creates
- * the right matrices and applies the translations.
- *
- */
-void translation_object()
-{}
-
-/** Given 2 multi-dimensional arrays, applies the scalar
- * product between them.
- */
-void dot_product(float** matrix_a, float** matrix_b)
-{
-/*
-    // TODO: Written in pseudo-code
-    auto matrix_b_rows = matrix_b.lines;
-    auto matrix_final;
-
-    for (auto i = 0u; i < matrix_a.lines; ++i)
-        for (auto j = 0u; j < matrix_b.cols; ++j) {
-            matrix_final[i][j] = 0;
-            for (auto k = 0u; k < matrix_b_rows; ++k)
-                matrix_final[i][j] += matrix_a[i][k] * matrix_b[k][j];
-        }
-
-    return matrix_final;
-*/
-}
 
 /* Callbacks */
 extern "C" {
@@ -118,9 +97,13 @@ extern "C" {
         auto x = gtk_spin_button_get_value(_new_obj_x);
         auto y = gtk_spin_button_get_value(_new_obj_y);
         auto coord = Coordinate(x, y);
-    
+
         _coordinates_storage.push_back(coord);
-        print("Coordinate saved.\n");
+
+        /* Creates a new entry on the tree view */
+        GtkTreeIter it;
+        gtk_list_store_append(_coord_list, &it);
+        gtk_list_store_set(_coord_list, &it, 0, x, 1, y, -1);
     }
 
     void add_line(std::string name)
@@ -129,6 +112,13 @@ extern "C" {
         auto line = new Line(name, LINE);
         line->add_coordinates(_coordinates_storage);
         _display_file.push_back(line);
+
+        /* Add the element to the list store */
+        char aux[1024];
+        strcpy(aux, name.c_str());
+        GtkTreeIter it;
+        gtk_list_store_append(_name_list, &it);
+        gtk_list_store_set(_name_list, &it, 0, aux, 1, "LINE", -1);
     }
 
     void add_polygon(std::string name)
@@ -137,6 +127,13 @@ extern "C" {
         auto polygon = new Polygon(name, POLYGON);
         polygon->add_coordinates(_coordinates_storage);
         _display_file.push_back(polygon);
+        
+        /* Add the element to the list store */
+        char aux[1024];
+        strcpy(aux, name.c_str());
+        GtkTreeIter it;
+        gtk_list_store_append(_name_list, &it);
+        gtk_list_store_set(_name_list, &it, 0, aux, 1, "POLYGON", -1);
     }
 
     void add_point(std::string name)
@@ -145,6 +142,44 @@ extern "C" {
         auto point = new Point(name, POINT);
         point->add_coordinates(_coordinates_storage[0]);
         _display_file.push_back(point);
+
+        /* Add the element to the list store */
+        char aux[1024];
+        strcpy(aux, name.c_str());
+        GtkTreeIter it;
+        gtk_list_store_append(_name_list, &it);
+        gtk_list_store_set(_name_list, &it, 0, aux, 1, "POINT", -1);
+    }
+
+    void create_object_button(GtkButton* button, GtkEntry* obj_name)
+    {
+        auto name = gtk_entry_get_text(obj_name);
+        if (name[0] == '\0') {
+            print("Object not added. Insert a name to it!\n");
+            return;
+        }
+
+        /* Detects the number of points and add it */
+        switch(_coordinates_storage.size())
+        {
+            case 0:
+                break;
+            case 1:
+                add_point(name);
+                break;
+            case 2:
+                add_line(name);
+                break;
+            default:
+                add_polygon(name);
+                break;
+        }
+
+        /* Invalidates the actual draw to update the draw area */
+        gtk_widget_queue_draw(_draw_area);
+        _coordinates_storage.clear();
+        gtk_list_store_clear(_coord_list);
+        print("Object with created and added to display file.\n");
     }
 
     void zoom_in()
@@ -184,31 +219,79 @@ extern "C" {
         gtk_widget_queue_draw(_draw_area);
     }
 
-    void create_object_button(GtkButton* button, GtkEntry* obj_name)
-    {
-        auto name = gtk_entry_get_text(obj_name);
+    void transformation_dialog()
+    {  
+        GtkTreeModel* model;
+        GtkTreeIter it;
 
-        /* Detects the number of points and add it */
-        switch(_coordinates_storage.size())
-        {
-            case 0:
-                break;
-            case 1:
-                add_point(name);
-                break;
-            case 2:
-                add_line(name);
-                break;
-            default:
-                add_polygon(name);
-                break;
+        GtkTreeSelection* selection = gtk_tree_view_get_selection(_obj_name_view);
+        if (gtk_tree_selection_get_selected(selection, &model, &it)) {
+            auto transf_dialog = (GtkDialog*)gtk_builder_get_object(
+                                    GTK_BUILDER(builder),
+                                    "transformation_dialog");
+            gtk_dialog_run(GTK_DIALOG(transf_dialog));
+        } else {
+            print("Object not selected. Select one to apply the transform!\n");
         }
 
-        /* Invalidates the actual draw to update the draw area */
-        gtk_widget_queue_draw(_draw_area);
-        _coordinates_storage.clear();
-        print("Object with created and added to display file.\n");
     }
+
+    void apply_transformation(GtkButton* btn, GtkWidget* widget)
+    {
+        GtkTreeModel* model;
+        GtkTreeIter it;
+        Object* obj;
+        float x, y, ang;
+
+        /* Gets the object to be transformed */
+        GtkTreeSelection* selection = gtk_tree_view_get_selection(_obj_name_view);
+        if (gtk_tree_selection_get_selected(selection, &model, &it)) {
+            gchar *name;
+            gtk_tree_model_get(model, &it, 0, &name, -1);
+
+            // Get the object to be called
+            obj = _display_file.get_object(name);
+        }
+
+        /* Gets the transformation options */
+        GtkComboBoxText* combo_box = (GtkComboBoxText*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "transf_select");
+
+        /* Gets the displacement data */
+        auto transf_x = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "transf_x_coord");
+        auto transf_y = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "transf_y_coord");
+        auto transf_ang = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "transf_angle");
+        x = gtk_spin_button_get_value(transf_x);
+        y = gtk_spin_button_get_value(transf_y);
+        ang = gtk_spin_button_get_value(transf_ang);
+
+        auto selected = gtk_combo_box_text_get_active_text(combo_box);
+        if(!strncmp(selected, "Rotate from origin", 24)){
+            rotate_2d_object(obj, ang);
+        } else if(!strncmp(selected, "Rotate from world center", 24)){
+            x = _viewport->window_center_x(); 
+            y = _viewport->window_center_y(); 
+            rotate_2d_object(obj, ang, x, y);
+        } else if(!strncmp(selected, "Rotate from coordinates", 24)){
+            rotate_2d_object(obj, ang, x, y);
+        } else if(!strncmp(selected, "Scaling", 8)){
+            scale_2d_object(obj, x, y);
+        } else if (!strncmp(selected, "Translation", 12)){
+            translation_2d_object(obj, x, y);
+        }
+
+        /* Redraw and close popup */
+        gtk_widget_queue_draw(_draw_area);
+        gtk_widget_hide(widget);
+    }
+
 }
 
 #endif // UTILS_HPP

@@ -2,8 +2,13 @@
 <!-- Generated with glade 3.20.0 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
+  <object class="GtkAdjustment" id="adjustment_angle">
+    <property name="upper">360</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkAdjustment" id="adjustment_step_size">
-    <property name="upper">100</property>
+    <property name="upper">1000</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
@@ -19,6 +24,219 @@
     <property name="upper">1000</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
+  </object>
+  <object class="GtkDialog" id="transformation_dialog">
+    <property name="width_request">200</property>
+    <property name="height_request">200</property>
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Transformation</property>
+    <property name="resizable">False</property>
+    <property name="type_hint">dialog</property>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="transf_box">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="ok_btn">
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="transf_ok_button">
+                <property name="label">gtk-ok</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="apply_transformation" object="transformation_dialog" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox" id="t_box">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel" id="transf_label">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_top">5</property>
+                <property name="margin_bottom">5</property>
+                <property name="label" translatable="yes">Coordinates (to apply the transformation):</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox" id="transf_coord">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">center</property>
+                <property name="margin_bottom">5</property>
+                <property name="spacing">5</property>
+                <child>
+                  <object class="GtkLabel" id="transf_x">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">x:</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="transf_x_coord">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">●</property>
+                    <property name="text" translatable="yes">0.0</property>
+                    <property name="xalign">1</property>
+                    <property name="adjustment">adjustment_x_coord</property>
+                    <property name="climb_rate">1</property>
+                    <property name="digits">1</property>
+                    <property name="numeric">True</property>
+                    <property name="value">2.2351741811588166e-10</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="transf_y">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">y:</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="transf_y_coord">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">●</property>
+                    <property name="text" translatable="yes">0.0</property>
+                    <property name="xalign">1</property>
+                    <property name="adjustment">adjustment_y_coord</property>
+                    <property name="climb_rate">1</property>
+                    <property name="digits">1</property>
+                    <property name="numeric">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="transf_ang">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">angle:</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSpinButton" id="transf_angle">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">●</property>
+                    <property name="text" translatable="yes">0.0</property>
+                    <property name="xalign">1</property>
+                    <property name="adjustment">adjustment_angle</property>
+                    <property name="climb_rate">1</property>
+                    <property name="digits">1</property>
+                    <property name="numeric">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">5</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="transf_label2">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="margin_top">5</property>
+                <property name="margin_bottom">5</property>
+                <property name="label" translatable="yes">Transformation:</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkComboBoxText" id="transf_select">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="active_id">0</property>
+                <items>
+                  <item id="0" translatable="yes">Rotate from origin</item>
+                  <item id="1" translatable="yes">Rotate from world center</item>
+                  <item id="2" translatable="yes">Rotate from coordinates</item>
+                  <item id="3" translatable="yes">Scaling</item>
+                  <item id="4" translatable="yes">Translation</item>
+                </items>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkListStore" id="obj_name_list">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+      <!-- column-name Type -->
+      <column type="gchararray"/>
+    </columns>
   </object>
   <object class="GtkListStore" id="object_list_store">
     <columns>
@@ -38,7 +256,7 @@
     <property name="gravity">center</property>
     <signal name="delete-event" handler="close_window" swapped="no"/>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="main_box">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="margin_bottom">10</property>
@@ -48,7 +266,7 @@
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkScrolledWindow" id="scrl">
                 <property name="width_request">800</property>
                 <property name="height_request">720</property>
                 <property name="visible">True</property>
@@ -206,11 +424,11 @@
               </packing>
             </child>
             <child>
-              <object class="GtkAlignment">
+              <object class="GtkAlignment" id="al1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="step_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_top">5</property>
@@ -251,11 +469,11 @@
               </packing>
             </child>
             <child>
-              <object class="GtkAlignment">
+              <object class="GtkAlignment" id="al2">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="move_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_top">5</property>
@@ -277,7 +495,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkBox" id="mov_box2">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
@@ -345,33 +563,82 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="object_label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_top">15</property>
-                <property name="margin_bottom">5</property>
-                <property name="label" translatable="yes">&lt;b&gt;Objects&lt;/b&gt;</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">6</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkBox" id="objects_box">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <property name="baseline_position">bottom</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkLabel" id="object_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">15</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Objects&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkTreeView" id="obj_name_view">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="model">obj_name_list</property>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection" id="test2"/>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="obj_name">
+                        <property name="resizable">True</property>
+                        <property name="title" translatable="yes">Name</property>
+                        <property name="expand">True</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="cellrenderertext1">
+                            <property name="alignment">right</property>
+                            <property name="editable">True</property>
+                          </object>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="obj_type">
+                        <property name="resizable">True</property>
+                        <property name="title" translatable="yes">Type</property>
+                        <property name="expand">True</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="cellrenderertext2">
+                            <property name="alignment">right</property>
+                            <property name="editable">True</property>
+                          </object>
+                          <attributes>
+                            <attribute name="text">1</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox" id="name_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_bottom">10</property>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="name_o_lab">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">Name: </property>
@@ -402,7 +669,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">0</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
@@ -429,7 +696,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">●</property>
-                        <property name="text" translatable="yes">0.000</property>
+                        <property name="text" translatable="yes">0.0</property>
                         <property name="xalign">1</property>
                         <property name="adjustment">adjustment_x_coord</property>
                         <property name="climb_rate">1</property>
@@ -459,7 +726,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">●</property>
-                        <property name="text" translatable="yes">0.000</property>
+                        <property name="text" translatable="yes">0.0</property>
                         <property name="xalign">1</property>
                         <property name="adjustment">adjustment_y_coord</property>
                         <property name="climb_rate">1</property>
@@ -476,37 +743,25 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="add_coordinate_button">
-                    <property name="label" translatable="yes">Add Coordinate</property>
+                  <object class="GtkTreeView" id="coord_treeview">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="margin_bottom">16</property>
-                    <signal name="clicked" handler="add_coordinate" object="obj_x" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkTreeView" id="object_treeview">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
                     <property name="margin_bottom">10</property>
                     <property name="model">object_list_store</property>
+                    <property name="headers_clickable">False</property>
                     <child internal-child="selection">
-                      <object class="GtkTreeSelection"/>
+                      <object class="GtkTreeSelection" id="test"/>
                     </child>
                     <child>
                       <object class="GtkTreeViewColumn" id="col_obj_x">
                         <property name="resizable">True</property>
                         <property name="title" translatable="yes">x</property>
+                        <property name="expand">True</property>
                         <child>
                           <object class="GtkCellRendererText" id="cellrenderertext3">
                             <property name="alignment">right</property>
@@ -522,13 +777,14 @@
                       <object class="GtkTreeViewColumn" id="col_obj_y">
                         <property name="resizable">True</property>
                         <property name="title" translatable="yes">y</property>
+                        <property name="expand">True</property>
                         <child>
                           <object class="GtkCellRendererText" id="cellrenderertext4">
                             <property name="alignment">right</property>
                             <property name="editable">True</property>
                           </object>
                           <attributes>
-                            <attribute name="text">0</attribute>
+                            <attribute name="text">1</attribute>
                           </attributes>
                         </child>
                       </object>
@@ -537,7 +793,22 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="add_coordinate_button">
+                    <property name="label" translatable="yes">Add Coordinate</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="margin_bottom">1</property>
+                    <signal name="clicked" handler="add_coordinate" object="obj_x" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">5</property>
                   </packing>
                 </child>
                 <child>
@@ -546,12 +817,27 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="margin_bottom">1</property>
                     <signal name="clicked" handler="create_object_button" object="obj_name_entry" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">4</property>
+                    <property name="position">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="transform_button">
+                    <property name="label" translatable="yes">Transform Object</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="clicked" handler="transformation_dialog" object="obj_name_view" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">7</property>
                   </packing>
                 </child>
               </object>
@@ -570,5 +856,23 @@
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkListStore" id="object_list_store1">
+    <columns>
+      <!-- column-name x -->
+      <column type="gdouble"/>
+      <!-- column-name y -->
+      <column type="gdouble"/>
+    </columns>
+  </object>
+  <object class="GtkListStore" id="transf_type_list">
+    <columns>
+      <!-- column-name Rotate -->
+      <column type="gchararray"/>
+      <!-- column-name Rotate1 -->
+      <column type="gchararray"/>
+      <!-- column-name Rotate2 -->
+      <column type="gchararray"/>
+    </columns>
   </object>
 </interface>

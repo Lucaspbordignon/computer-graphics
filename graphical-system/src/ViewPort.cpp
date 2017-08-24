@@ -1,5 +1,4 @@
 #include "ViewPort.hpp"
-#include <iostream>
 
 /**
  * Draws all the objects of a display file on a drawing area. The display file
@@ -42,8 +41,12 @@ Coordinate ViewPort::viewport_transform(Coordinate& coord)
     auto width = _x_max - _x_min;
     auto height = _y_max - _y_min;
 
-    auto x_vp = ((coord.x() - _window.get_x_min()) / (_window.get_x_max() - _window.get_x_min())) * width;
-    auto y_vp = (1 - (coord.y() - _window.get_y_min()) / (_window.get_y_max() - _window.get_y_min())) * height;
+    auto x_vp = ((coord.x() - _window.get_x_min()) / 
+            (_window.get_x_max() - _window.get_x_min())) * width;
+
+    auto y_vp = (1 - (coord.y() - _window.get_y_min()) /
+            (_window.get_y_max() - _window.get_y_min())) * height;
+
     return Coordinate(x_vp, y_vp);
 }
 
@@ -130,4 +133,14 @@ void ViewPort::move(DIRECTION direction, float step_size)
             _window.set_x_min(_window.get_x_min() + step_size);
             break;
     }
+}
+
+float ViewPort::window_center_x()
+{
+    return _window.x_center();
+}
+
+float ViewPort::window_center_y()
+{
+    return _window.y_center();
 }

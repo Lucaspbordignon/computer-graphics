@@ -41,10 +41,10 @@ class Object
             _name(name),
             _type(type) {}
         virtual ~Object() {};
-        virtual void add_coordinates(float x, float y)
-            {_coordinates.push_back(Coordinate(x, y));}
-        virtual void add_coordinates(Coordinate coord) 
-            {_coordinates.push_back(coord);}
+        virtual void add_coordinates(float x, float y);
+        virtual void add_coordinates(Coordinate coord);
+        void update_coordinate(Coordinate coord, int pos);
+        Coordinate center_point();
         OBJECT_TYPE type() {return _type;}
         std::string name() {return _name;}
         std::vector<Coordinate> coordinate() {return _coordinates;}
