@@ -7,6 +7,24 @@
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
+  <object class="GtkAdjustment" id="adjustment_step_size">
+    <property name="upper">1000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment_x_coord">
+    <property name="lower">-1000</property>
+    <property name="upper">1000</property>
+    <property name="value">2.2351741811588166e-10</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment_y_coord">
+    <property name="lower">-1000</property>
+    <property name="upper">1000</property>
+    <property name="step_increment">1</property>
+    <property name="page_increment">10</property>
+  </object>
   <object class="GtkDialog" id="transformation_dialog">
     <property name="width_request">200</property>
     <property name="height_request">200</property>
@@ -211,24 +229,6 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkAdjustment" id="adjustment_step_size">
-    <property name="upper">1000</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object>
-  <object class="GtkAdjustment" id="adjustment_x_coord">
-    <property name="lower">-1000</property>
-    <property name="upper">1000</property>
-    <property name="value">2.2351741811588166e-10</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-  </object>
-  <object class="GtkAdjustment" id="adjustment_y_coord">
-    <property name="lower">-1000</property>
-    <property name="upper">1000</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
   </object>
   <object class="GtkListStore" id="obj_name_list">
     <columns>
@@ -802,7 +802,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="margin_bottom">10</property>
+                    <property name="margin_bottom">1</property>
                     <signal name="clicked" handler="add_coordinate" object="obj_x" swapped="no"/>
                   </object>
                   <packing>
@@ -817,7 +817,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="margin_bottom">5</property>
+                    <property name="margin_bottom">1</property>
                     <signal name="clicked" handler="create_object_button" object="obj_name_entry" swapped="no"/>
                   </object>
                   <packing>
@@ -832,7 +832,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="margin_top">5</property>
                     <signal name="clicked" handler="transformation_dialog" object="obj_name_view" swapped="no"/>
                   </object>
                   <packing>
