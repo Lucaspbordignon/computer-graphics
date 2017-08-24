@@ -62,8 +62,8 @@
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkScrolledWindow" id="scrl">
-                <property name="width_request">800</property>
-                <property name="height_request">720</property>
+                <property name="width_request">500</property>
+                <property name="height_request">500</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="shadow_type">in</property>
@@ -123,7 +123,7 @@
             </child>
             <child>
               <object class="GtkScrolledWindow" id="log_box_scroll">
-                <property name="height_request">100</property>
+                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="margin_bottom">1</property>
