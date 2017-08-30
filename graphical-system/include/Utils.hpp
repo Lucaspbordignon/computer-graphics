@@ -140,7 +140,7 @@ extern "C" {
     {
         /* Inserts a point to the display file */
         auto point = new Point(name, POINT);
-        point->add_coordinates(_coordinates_storage[0]);
+        point->add_coordinates(_coordinates_storage[0], WORLD);
         _display_file.push_back(point);
 
         /* Add the element to the list store */
@@ -285,6 +285,9 @@ extern "C" {
             scale_2d_object(obj, x, y);
         } else if (!strncmp(selected, "Translation", 12)){
             translation_2d_object(obj, x, y);
+        } else if (!strncmp(selected, "Rotate the Window", 18)){
+            // TODO
+            rotate_window(_viewport->window(), _display_file, 45.0);
         }
 
         /* Redraw and close popup */

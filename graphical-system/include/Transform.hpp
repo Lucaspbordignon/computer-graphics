@@ -35,8 +35,8 @@ void translation_2d_object(Object* obj, float dx, float dy)
         {dx, dy, 1}
     });
 
-    for (auto i = 0u; i < obj->coordinate().size(); ++i) {
-        auto coord = obj->coordinate()[i];
+    for (auto i = 0u; i < obj->world_coordinate().size(); ++i) {
+        auto coord = obj->world_coordinate()[i];
         auto coord_matrix = Matrix( {{coord.x(), coord.y(), 1.0}} );
         coord_matrix = dot_product(coord_matrix, transformation);
         obj->update_coordinate(Coordinate(coord_matrix[0][0], coord_matrix[0][1]), i);
@@ -55,8 +55,8 @@ void scale_2d_object(Object* obj, float sx, float sy)
         {0, 0, 1}
     });
 
-    for (auto i = 0u; i < obj->coordinate().size(); ++i) {
-        auto coord = obj->coordinate()[i];
+    for (auto i = 0u; i < obj->world_coordinate().size(); ++i) {
+        auto coord = obj->world_coordinate()[i];
         auto coord_matrix = Matrix( {{coord.x(), coord.y(), 1.0}} );
         coord_matrix = dot_product(coord_matrix, transformation);
         obj->update_coordinate(Coordinate(coord_matrix[0][0], coord_matrix[0][1]), i);
@@ -76,8 +76,8 @@ void rotate_2d_object(Object* obj, float angle)
         {0, 0, 1} 
     });
 
-    for (auto i = 0u; i < obj->coordinate().size(); ++i) {
-        auto coord = obj->coordinate()[i];
+    for (auto i = 0u; i < obj->world_coordinate().size(); ++i) {
+        auto coord = obj->world_coordinate()[i];
         auto coord_matrix = Matrix( {{coord.x(), coord.y(), 1.0}} );
         coord_matrix = dot_product(coord_matrix, transformation);
         obj->update_coordinate(Coordinate(coord_matrix[0][0], coord_matrix[0][1]), i);
@@ -96,8 +96,8 @@ void rotate_2d_object(Object* obj, float angle, float x, float y)
     auto cos_angle = std::cos(ang_in_rad);
     auto sin_angle = std::sin(ang_in_rad);
 
-    for (auto i = 0u; i < obj->coordinate().size(); ++i) {
-        auto coord = obj->coordinate()[i];
+    for (auto i = 0u; i < obj->world_coordinate().size(); ++i) {
+        auto coord = obj->world_coordinate()[i];
 
         auto dx = coord.x() - x;
         auto dy = coord.y() - y;
@@ -105,6 +105,56 @@ void rotate_2d_object(Object* obj, float angle, float x, float y)
         auto new_y = (dx * sin_angle) + (dy * cos_angle) + y;
 
         obj->update_coordinate(Coordinate(new_x, new_y), i);
+    }
+}
+
+Matrix mat_transfer(float dx, float dy) {
+    return Matrix({{1, 0, 0}, {0, 1, 0}, {dx, dy, 1}});
+}
+
+Matrix mat_scale(float sx, float sy) {
+    return Matrix({{sx, 0, 0}, {0, sy, 0}, {0, 0, 1}});
+}
+
+Matrix mat_rotate(double a) {
+    return Matrix({
+            {std::cos(a), -std::sin(a), 0},
+            {std::sin(a), std::cos(a), 0},
+            {0, 0, 1}});
+}
+
+void normalize(Object* obj, Matrix norm_mat)
+{
+    auto norm_coord = std::vector<Coordinate>();
+    auto wrld_coord = obj->world_coordinate();
+    for (auto& i : wrld_coord) {
+      Matrix result = dot_product(Matrix({{i.x(), i.y(), 1}}), norm_mat);
+      norm_coord.push_back(Coordinate(result[0][0], result[0][1]));
+    }
+    obj->add_coordinates(norm_coord, WINDOW);
+}
+
+
+/**
+ * Rotates the window.
+ */
+void rotate_window(Frame* window, DisplayFile& objects, const float angle)
+{
+    auto wc_x = window->x_center();
+    auto wc_y = window->y_center();
+    auto m_scale = mat_scale(2/(window->get_x_max() - window->get_x_min()),
+                             2/(window->get_y_max() - window->get_y_min()));
+    
+    auto normalization_mat = dot_product(mat_transfer(-wc_x, -wc_y),
+                                         mat_rotate(-angle));
+    normalization_mat = dot_product(normalization_mat, m_scale); 
+
+    for(auto obj = objects.begin(); obj != objects.end(); ++obj) {
+        normalize(*obj, normalization_mat);
+        //translation_2d_object(*obj, -wc_x, -wc_y);
+        //rotate_2d_object(*obj, -angle);
+        //scale_2d_object(*obj, (2/(window->get_x_max() - window->get_x_min())),
+        //                      (2/(window->get_y_max() - window->get_y_min())));
     }
 }
 

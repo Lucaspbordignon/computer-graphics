@@ -28,19 +28,16 @@ enum DIRECTION
 class Coordinate
 {
     public:
-        Coordinate(float x, float y, COORDINATE_TYPE type = WORLD):
+        Coordinate(float x, float y):
             _x(x),
-            _y(y),
-            _type(type) {}
+            _y(y) {}
         virtual ~Coordinate() {};
 
         float x() {return _x;}
         float y() {return _y;}
-        COORDINATE_TYPE type() {return _type;}
 
     private:
         float _x, _y;
-        COORDINATE_TYPE type;
 };
 
 class Object
@@ -51,7 +48,8 @@ class Object
             _type(type) {}
         virtual ~Object() {};
         virtual void add_coordinates(float x, float y, COORDINATE_TYPE type);
-        virtual void add_corrdinates(Coordinate coord);
+        virtual void add_coordinates(Coordinate coord, COORDINATE_TYPE type);
+        virtual void add_coordinates(std::vector<Coordinate>, COORDINATE_TYPE type);
         void update_coordinate(Coordinate coord, int pos);
         Coordinate center_point();
         OBJECT_TYPE type() {return _type;}
@@ -78,7 +76,7 @@ class Line: public Object
         void add_coordinates(std::vector<Coordinate> coord) 
         {
             for(auto i = coord.begin(); i != coord.end(); ++i)
-                _coordinates.push_back(*i);
+                _world_coordinates.push_back(*i);
         }
 };
 
@@ -91,7 +89,7 @@ class Polygon: public Object
         void add_coordinates(std::vector<Coordinate> coord) 
         {
             for(auto i = coord.begin(); i != coord.end(); ++i)
-                _coordinates.push_back(*i);
+                _world_coordinates.push_back(*i);
         }
 };
 

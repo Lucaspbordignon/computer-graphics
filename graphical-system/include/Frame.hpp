@@ -1,14 +1,30 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
+#include "Object.hpp"
 
-class Frame {
+class Frame : public Object {
     public:
+        Frame() : Object("Window", POLYGON)
+        {
+            add_coordinates(-1, -1, WINDOW);
+            add_coordinates(-1, 1, WINDOW);
+            add_coordinates(1, -1, WINDOW);
+            add_coordinates(1, 1, WINDOW);
+        }
+
         Frame(float x_min, float y_min, float x_max, float y_max):
+            Object("Window", POLYGON),
             _x_min(x_min),
             _y_min(y_min),
             _x_max(x_max),
-            _y_max(y_max) {}
+            _y_max(y_max)
+            {
+                add_coordinates(-1, -1, WINDOW);
+                add_coordinates(-1, 1, WINDOW);
+                add_coordinates(1, -1, WINDOW);
+                add_coordinates(1, 1, WINDOW);
+            }
         virtual ~Frame() {};
         
         // Getters and Setters

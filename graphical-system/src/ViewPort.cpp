@@ -1,5 +1,21 @@
 #include "ViewPort.hpp"
 
+
+ViewPort::ViewPort(float x_min, float y_min, float x_max, float y_max)
+{
+    _x_min = x_min;
+    _y_min = y_min;
+    _x_max = x_max;
+    _y_max = y_max;
+
+    _window = Frame(x_min, y_min, x_max, y_max);
+}
+
+Frame* ViewPort::window()
+{
+    return &_window;
+}
+
 /**
  * Draws all the objects of a display file on a drawing area. The display file
  * is a linked list.
@@ -46,6 +62,10 @@ Coordinate ViewPort::viewport_transform(Coordinate& coord)
 
     auto y_vp = (1 - (coord.y() - _window.get_y_min()) /
             (_window.get_y_max() - _window.get_y_min())) * height;
+    
+    // Normalized transformation //
+    //auto x_vp = ((coord.x() - (-1)) / (1 - (-1))) * width;
+    //auto y_vp = (1 - (coord.y() - (-1)) / (1 - (-1))) * height;
 
     return Coordinate(x_vp, y_vp);
 }
@@ -56,7 +76,7 @@ Coordinate ViewPort::viewport_transform(Coordinate& coord)
  */
 void ViewPort::draw_line(Object* object, cairo_t* cr)
 {
-    auto coordinates = object->coordinate();
+    auto coordinates = object->world_coordinate();
     Coordinate first_coord = viewport_transform(coordinates[0]);
     Coordinate second_coord = viewport_transform(coordinates[1]);
 
@@ -71,7 +91,7 @@ void ViewPort::draw_line(Object* object, cairo_t* cr)
  */
 void ViewPort::draw_polygon(Object* object, cairo_t* cr)
 {
-    auto coordinates = object->coordinate();
+    auto coordinates = object->world_coordinate();
     Coordinate first_coord = viewport_transform(coordinates[0]);
 
     cairo_move_to(cr, first_coord.x(), first_coord.y());
@@ -90,7 +110,7 @@ void ViewPort::draw_polygon(Object* object, cairo_t* cr)
  */
 void ViewPort::draw_point(Object* object, cairo_t* cr)
 {
-    auto coordinates = object->coordinate();
+    auto coordinates = object->world_coordinate();
     Coordinate first_coord = viewport_transform(coordinates[0]);
 
     cairo_arc(cr, first_coord.x(), first_coord.y(), 3, 0, 2*M_PI);
