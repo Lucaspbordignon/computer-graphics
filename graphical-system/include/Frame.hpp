@@ -24,6 +24,10 @@ class Frame : public Object {
                 add_coordinates(-1, 1, WINDOW);
                 add_coordinates(1, -1, WINDOW);
                 add_coordinates(1, 1, WINDOW);
+                add_coordinates(x_min, y_min, WORLD);
+                add_coordinates(x_min, y_max, WORLD);
+                add_coordinates(x_max, y_min, WORLD);
+                add_coordinates(x_max, y_max, WORLD);
             }
         virtual ~Frame() {};
         
@@ -40,14 +44,19 @@ class Frame : public Object {
         float get_y_max() { return _y_max; }
         void set_y_max(float y_max) { _y_max = y_max; }
 
+        float angle() { return _angle; }
+
         float x_center() { return (_x_min + _x_max)/2; }
         float y_center() { return (_y_min + _y_max)/2; }
+
+        void rotate(float ang) { _angle +=  ang; }
 
     protected:
         float _x_min;
         float _y_min;
         float _x_max;
         float _y_max;
+        float _angle;
 };
 
 #endif // WINDOW_HPP

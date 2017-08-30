@@ -88,6 +88,7 @@ extern "C" {
     gboolean draw(GtkWidget* widget, cairo_t* cr)
     {
         /* Redraw a cairo context */
+        normalize_coordinates(*(_viewport->window()), _display_file);
         _viewport->draw_all_objects(cr, _display_file);
         return FALSE;
     }
@@ -110,7 +111,7 @@ extern "C" {
     {
         /* Inserts a line to the display file */
         auto line = new Line(name, LINE);
-        line->add_coordinates(_coordinates_storage);
+        line->add_coordinates(_coordinates_storage, WORLD);
         _display_file.push_back(line);
 
         /* Add the element to the list store */
@@ -125,7 +126,7 @@ extern "C" {
     {
         /* Inserts a polygon to the display file */
         auto polygon = new Polygon(name, POLYGON);
-        polygon->add_coordinates(_coordinates_storage);
+        polygon->add_coordinates(_coordinates_storage, WORLD);
         _display_file.push_back(polygon);
         
         /* Add the element to the list store */
@@ -286,8 +287,7 @@ extern "C" {
         } else if (!strncmp(selected, "Translation", 12)){
             translation_2d_object(obj, x, y);
         } else if (!strncmp(selected, "Rotate the Window", 18)){
-            // TODO
-            rotate_window(_viewport->window(), _display_file, 45.0);
+            _viewport->window()->rotate(ang);
         }
 
         /* Redraw and close popup */

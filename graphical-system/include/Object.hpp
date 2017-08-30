@@ -73,11 +73,6 @@ class Line: public Object
         Line(std::string name, OBJECT_TYPE type):
             Object(name, type) {}
         ~Line() {}
-        void add_coordinates(std::vector<Coordinate> coord) 
-        {
-            for(auto i = coord.begin(); i != coord.end(); ++i)
-                _world_coordinates.push_back(*i);
-        }
 };
 
 class Polygon: public Object
@@ -86,11 +81,6 @@ class Polygon: public Object
         Polygon(std::string name, OBJECT_TYPE type):
             Object(name, type) {}
         ~Polygon() {}
-        void add_coordinates(std::vector<Coordinate> coord) 
-        {
-            for(auto i = coord.begin(); i != coord.end(); ++i)
-                _world_coordinates.push_back(*i);
-        }
 };
 
 class Point: public Object

@@ -57,15 +57,15 @@ Coordinate ViewPort::viewport_transform(Coordinate& coord)
     auto width = _x_max - _x_min;
     auto height = _y_max - _y_min;
 
-    auto x_vp = ((coord.x() - _window.get_x_min()) / 
-            (_window.get_x_max() - _window.get_x_min())) * width;
+    //auto x_vp = ((coord.x() - _window.get_x_min()) / 
+    //        (_window.get_x_max() - _window.get_x_min())) * width;
 
-    auto y_vp = (1 - (coord.y() - _window.get_y_min()) /
-            (_window.get_y_max() - _window.get_y_min())) * height;
+    //auto y_vp = (1 - (coord.y() - _window.get_y_min()) /
+    //        (_window.get_y_max() - _window.get_y_min())) * height;
     
     // Normalized transformation //
-    //auto x_vp = ((coord.x() - (-1)) / (1 - (-1))) * width;
-    //auto y_vp = (1 - (coord.y() - (-1)) / (1 - (-1))) * height;
+    auto x_vp = ((coord.x() - (-1)) / (1 - (-1))) * width;
+    auto y_vp = (1 - (coord.y() - (-1)) / (1 - (-1))) * height;
 
     return Coordinate(x_vp, y_vp);
 }
@@ -76,7 +76,7 @@ Coordinate ViewPort::viewport_transform(Coordinate& coord)
  */
 void ViewPort::draw_line(Object* object, cairo_t* cr)
 {
-    auto coordinates = object->world_coordinate();
+    auto coordinates = object->window_coordinate();
     Coordinate first_coord = viewport_transform(coordinates[0]);
     Coordinate second_coord = viewport_transform(coordinates[1]);
 
@@ -91,7 +91,7 @@ void ViewPort::draw_line(Object* object, cairo_t* cr)
  */
 void ViewPort::draw_polygon(Object* object, cairo_t* cr)
 {
-    auto coordinates = object->world_coordinate();
+    auto coordinates = object->window_coordinate();
     Coordinate first_coord = viewport_transform(coordinates[0]);
 
     cairo_move_to(cr, first_coord.x(), first_coord.y());
@@ -110,7 +110,7 @@ void ViewPort::draw_polygon(Object* object, cairo_t* cr)
  */
 void ViewPort::draw_point(Object* object, cairo_t* cr)
 {
-    auto coordinates = object->world_coordinate();
+    auto coordinates = object->window_coordinate();
     Coordinate first_coord = viewport_transform(coordinates[0]);
 
     cairo_arc(cr, first_coord.x(), first_coord.y(), 3, 0, 2*M_PI);

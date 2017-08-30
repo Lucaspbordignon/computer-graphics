@@ -116,7 +116,7 @@ Matrix mat_scale(float sx, float sy) {
     return Matrix({{sx, 0, 0}, {0, sy, 0}, {0, 0, 1}});
 }
 
-Matrix mat_rotate(double a) {
+Matrix mat_rotate(float a) {
     return Matrix({
             {std::cos(a), -std::sin(a), 0},
             {std::sin(a), std::cos(a), 0},
@@ -134,28 +134,20 @@ void normalize(Object* obj, Matrix norm_mat)
     obj->add_coordinates(norm_coord, WINDOW);
 }
 
-
-/**
- * Rotates the window.
- */
-void rotate_window(Frame* window, DisplayFile& objects, const float angle)
+void normalize_coordinates(Frame window, DisplayFile& objects)
 {
-    auto wc_x = window->x_center();
-    auto wc_y = window->y_center();
-    auto m_scale = mat_scale(2/(window->get_x_max() - window->get_x_min()),
-                             2/(window->get_y_max() - window->get_y_min()));
+    float ang_in_rad = window.angle() * (M_PI / 180.0);
+    auto wc_x = window.x_center();
+    auto wc_y = window.y_center();
+    auto m_scale = mat_scale(2/(window.get_x_max() - window.get_x_min()),
+                             2/(window.get_y_max() - window.get_y_min()));
     
     auto normalization_mat = dot_product(mat_transfer(-wc_x, -wc_y),
-                                         mat_rotate(-angle));
+                                         mat_rotate(-ang_in_rad));
     normalization_mat = dot_product(normalization_mat, m_scale); 
 
-    for(auto obj = objects.begin(); obj != objects.end(); ++obj) {
+    for(auto obj = objects.begin(); obj != objects.end(); ++obj)
         normalize(*obj, normalization_mat);
-        //translation_2d_object(*obj, -wc_x, -wc_y);
-        //rotate_2d_object(*obj, -angle);
-        //scale_2d_object(*obj, (2/(window->get_x_max() - window->get_x_min())),
-        //                      (2/(window->get_y_max() - window->get_y_min())));
-    }
 }
 
 #endif // TRANSFORMATION_HPP
