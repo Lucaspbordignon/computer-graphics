@@ -25,6 +25,12 @@ enum DIRECTION
     RIGHT
 };
 
+enum ZOOM_TYPE
+{
+    IN,
+    OUT
+};
+
 class Coordinate
 {
     public:
@@ -57,13 +63,11 @@ class Object
         std::vector<Coordinate> world_coordinate() {return _world_coordinates;}
         std::vector<Coordinate> window_coordinate() {return _window_coordinates;}
 
-    protected:
-        std::vector<Coordinate> _world_coordinates;
-        std::vector<Coordinate> _window_coordinates;
-
     private:
         std::string _name;
         OBJECT_TYPE _type;
+        std::vector<Coordinate> _world_coordinates;
+        std::vector<Coordinate> _window_coordinates;
 };
 
 

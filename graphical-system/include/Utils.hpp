@@ -6,7 +6,6 @@
 #include <gtk/gtk.h>
 #include "Object.hpp"
 #include "ViewPort.hpp"
-#include "DisplayFile.hpp"
 #include "Transform.hpp"
 
 #define GUI_FILE "graphical_system.glade"
@@ -185,20 +184,19 @@ extern "C" {
 
     void zoom_in()
     {
-        _viewport->zoom_in();
+        _viewport->zoom(IN, gtk_spin_button_get_value(_step_size));
         gtk_widget_queue_draw(_draw_area);
     }
 
     void zoom_out()
     {
-        _viewport->zoom_out();
+        _viewport->zoom(OUT, gtk_spin_button_get_value(_step_size));
         gtk_widget_queue_draw(_draw_area);
     }
 
     void move_up()
     {
-        auto value = gtk_spin_button_get_value(_step_size);
-        _viewport->move(UP, value);
+        _viewport->move(UP, gtk_spin_button_get_value(_step_size));
         gtk_widget_queue_draw(_draw_area);
     }
 

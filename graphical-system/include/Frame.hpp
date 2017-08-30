@@ -20,14 +20,18 @@ class Frame : public Object {
             _x_max(x_max),
             _y_max(y_max)
             {
-                add_coordinates(-1, -1, WINDOW);
-                add_coordinates(-1, 1, WINDOW);
-                add_coordinates(1, -1, WINDOW);
-                add_coordinates(1, 1, WINDOW);
-                add_coordinates(x_min, y_min, WORLD);
-                add_coordinates(x_min, y_max, WORLD);
-                add_coordinates(x_max, y_min, WORLD);
-                add_coordinates(x_max, y_max, WORLD);
+                add_coordinates({
+                        Coordinate(-1, -1),
+                        Coordinate(-1, 1),
+                        Coordinate(1, -1),
+                        Coordinate(1, 1),
+                        }, WINDOW);
+                add_coordinates({
+                        Coordinate(x_min, y_min),
+                        Coordinate(x_min, y_max),
+                        Coordinate(x_max, y_min),
+                        Coordinate(x_max, y_max),
+                        }, WORLD);
             }
         virtual ~Frame() {};
         
@@ -51,7 +55,7 @@ class Frame : public Object {
 
         void rotate(float ang) { _angle +=  ang; }
 
-    protected:
+    private:
         float _x_min;
         float _y_min;
         float _x_max;

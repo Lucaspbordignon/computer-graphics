@@ -1,6 +1,5 @@
 #include "ViewPort.hpp"
 
-
 ViewPort::ViewPort(float x_min, float y_min, float x_max, float y_max)
 {
     _x_min = x_min;
@@ -111,20 +110,27 @@ void ViewPort::draw_point(Object* object, cairo_t* cr)
     cairo_fill(cr);
 }
 
-void ViewPort::zoom_in()
+/**
+ * Applies a zoom in or out at a given ratio.
+ */
+void ViewPort::zoom(ZOOM_TYPE type, float step_size)
 {
-    _window.set_x_max(_window.get_x_max() / 2);
-    _window.set_x_min(_window.get_x_min() * 2);
-    _window.set_y_max(_window.get_y_max() / 2);
-    _window.set_y_min(_window.get_y_min() * 2);
-}
-
-void ViewPort::zoom_out()
-{
-    _window.set_x_max(_window.get_x_max() * 2);
-    _window.set_x_min(_window.get_x_min() / 2);
-    _window.set_y_max(_window.get_y_max() * 2);
-    _window.set_y_min(_window.get_y_min() / 2);
+    switch(type) {
+        case IN:
+            step_size = 1 - (step_size / 1000);
+            _window.set_x_max(_window.get_x_max() * step_size);
+            _window.set_x_min(_window.get_x_min() * step_size);
+            _window.set_y_max(_window.get_y_max() * step_size);
+            _window.set_y_min(_window.get_y_min() * step_size);
+            break;
+        case OUT:
+            step_size = 1 + (step_size / 1000);
+            _window.set_x_max(_window.get_x_max() * step_size);
+            _window.set_x_min(_window.get_x_min() * step_size);
+            _window.set_y_max(_window.get_y_max() * step_size);
+            _window.set_y_min(_window.get_y_min() * step_size);
+            break;
+    }
 }
 
 void ViewPort::move(DIRECTION direction, float step_size)

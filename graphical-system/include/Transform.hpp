@@ -3,6 +3,7 @@
 
 #include "Object.hpp"
 #include "Matrix.hpp"
+#include "DisplayFile.hpp"
 
 
 /** 
