@@ -20,4 +20,8 @@ class Matrix {
         std::vector<std::vector<float>> _data;
 };
 
+Matrix mat_transfer(float, float);
+Matrix mat_scale(float, float);
+Matrix mat_rotate(float);
+
 #endif // MATRIX_HPP

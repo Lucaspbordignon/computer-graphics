@@ -57,13 +57,7 @@ Coordinate ViewPort::viewport_transform(Coordinate& coord)
     auto width = _x_max - _x_min;
     auto height = _y_max - _y_min;
 
-    //auto x_vp = ((coord.x() - _window.get_x_min()) / 
-    //        (_window.get_x_max() - _window.get_x_min())) * width;
-
-    //auto y_vp = (1 - (coord.y() - _window.get_y_min()) /
-    //        (_window.get_y_max() - _window.get_y_min())) * height;
-    
-    // Normalized transformation //
+    /* Normalized transformation */
     auto x_vp = ((coord.x() - (-1)) / (1 - (-1))) * width;
     auto y_vp = (1 - (coord.y() - (-1)) / (1 - (-1))) * height;
 
@@ -155,11 +149,17 @@ void ViewPort::move(DIRECTION direction, float step_size)
     }
 }
 
+/**
+ * Returns the postion, at the x axis, of the center of the window.
+ */
 float ViewPort::window_center_x()
 {
     return _window.x_center();
 }
 
+/**
+ * Returns the postion, at the y axis, of the center of the window.
+ */
 float ViewPort::window_center_y()
 {
     return _window.y_center();

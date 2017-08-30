@@ -108,25 +108,15 @@ void rotate_2d_object(Object* obj, float angle, float x, float y)
     }
 }
 
-Matrix mat_transfer(float dx, float dy) {
-    return Matrix({{1, 0, 0}, {0, 1, 0}, {dx, dy, 1}});
-}
-
-Matrix mat_scale(float sx, float sy) {
-    return Matrix({{sx, 0, 0}, {0, sy, 0}, {0, 0, 1}});
-}
-
-Matrix mat_rotate(float a) {
-    return Matrix({
-            {std::cos(a), -std::sin(a), 0},
-            {std::sin(a), std::cos(a), 0},
-            {0, 0, 1}});
-}
-
+/**
+ * Given an object and a matrix of normalization, applies it to the object
+ * and save the normalized coordinates inside of it.
+ */
 void normalize(Object* obj, Matrix norm_mat)
 {
     auto norm_coord = std::vector<Coordinate>();
     auto wrld_coord = obj->world_coordinate();
+
     for (auto& i : wrld_coord) {
       Matrix result = dot_product(Matrix({{i.x(), i.y(), 1}}), norm_mat);
       norm_coord.push_back(Coordinate(result[0][0], result[0][1]));
@@ -134,6 +124,11 @@ void normalize(Object* obj, Matrix norm_mat)
     obj->add_coordinates(norm_coord, WINDOW);
 }
 
+/**
+ * Applies the normalization of a NCS (Normalized Coordinate System) to
+ * all the objects of a given display file. Rotations of the window may
+ * occour.
+ */
 void normalize_coordinates(Frame window, DisplayFile& objects)
 {
     float ang_in_rad = window.angle() * (M_PI / 180.0);

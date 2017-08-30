@@ -1,5 +1,4 @@
 #include "Matrix.hpp"
-#include <csignal>
 
 Matrix::Matrix(size_t rows, size_t cols)
 {
@@ -36,4 +35,19 @@ std::vector<float> Matrix::operator[](size_t i) const
 void Matrix::operator=(std::vector<std::vector<float>> mat)
 {
     _data = mat;
+}
+
+Matrix mat_transfer(float dx, float dy) {
+    return Matrix({{1, 0, 0}, {0, 1, 0}, {dx, dy, 1}});
+}
+
+Matrix mat_scale(float sx, float sy) {
+    return Matrix({{sx, 0, 0}, {0, sy, 0}, {0, 0, 1}});
+}
+
+Matrix mat_rotate(float a) {
+    return Matrix({
+            {std::cos(a), -std::sin(a), 0},
+            {std::sin(a), std::cos(a), 0},
+            {0, 0, 1}});
 }
