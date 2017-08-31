@@ -284,8 +284,6 @@ extern "C" {
             scale_2d_object(obj, x, y);
         } else if (!strncmp(selected, "Translation", 12)){
             translation_2d_object(obj, x, y);
-        } else if (!strncmp(selected, "Rotate the Window", 18)){
-            _viewport->window()->rotate(ang);
         }
 
         /* Redraw and close popup */
@@ -293,6 +291,13 @@ extern "C" {
         gtk_widget_hide(widget);
     }
 
+    void rotate_window(GtkButton* btn, GtkSpinButton* ang_button)
+    {
+        /* Set a specific angle to the window */
+        auto ang = gtk_spin_button_get_value(ang_button);
+        _viewport->window()->rotate(ang);
+        gtk_widget_queue_draw(_draw_area);
+    }
 }
 
 #endif // UTILS_HPP
