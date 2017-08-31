@@ -66,27 +66,6 @@ void scale_2d_object(Object* obj, float sx, float sy)
 
 /**
  * Given an Object and a certain angle (in degrees), applies a rotation
- * algorithm on it, rotation based on the origin.
- */
-void rotate_2d_object(Object* obj, float angle)
-{
-    float ang_in_rad = angle * (M_PI / 180.0);
-    Matrix transformation = Matrix({
-        {std::cos(ang_in_rad), -std::sin(ang_in_rad), 0},        
-        {std::sin(ang_in_rad), std::cos(ang_in_rad), 0},
-        {0, 0, 1} 
-    });
-
-    for (auto i = 0u; i < obj->world_coordinate().size(); ++i) {
-        auto coord = obj->world_coordinate()[i];
-        auto coord_matrix = Matrix( {{coord.x(), coord.y(), 1.0}} );
-        coord_matrix = dot_product(coord_matrix, transformation);
-        obj->update_coordinate(Coordinate(coord_matrix[0][0], coord_matrix[0][1]), i);
-    }
-}
-
-/**
- * Given an Object and a certain angle (in degrees), applies a rotation
  * algorithm on it. The rotation is centered at the point (x, y), so a
  * translation is made, then the rotation and a translation to the original
  * point is applied. All is made in a single matrix multiplication.

@@ -273,7 +273,7 @@ extern "C" {
 
         auto selected = gtk_combo_box_text_get_active_text(combo_box);
         if(!strncmp(selected, "Rotate from origin", 24)){
-            rotate_2d_object(obj, ang);
+            rotate_2d_object(obj, ang, 0, 0);
         } else if(!strncmp(selected, "Rotate from world center", 24)){
             x = _viewport->window_center_x(); 
             y = _viewport->window_center_y(); 
