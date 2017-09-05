@@ -28,14 +28,14 @@ class Clipper
         void window(Frame window) : _window(window) {}
 
         void clip_2d_point(Point* point);
-        void clip_2d_line(Line* line, LINE_CLIPPING_METHOD method = COHEEN_SUTHERLAND);
+        Line* clip_2d_line(Line* line, LINE_CLIPPING_METHOD method = COHEEN_SUTHERLAND);
         void clip_2d_polygon(Polygon* polygon);
     private:
         Frame _window;
 
-        void coheen_sutherland(Line* line);
+        Line* coheen_sutherland(Line* line);
         REGION_CODE get_region_code(Coordinate coord);
-        void liang_barsky(Line* line);
+        Line* liang_barsky(Line* line);
 }
 
 #endif // CLIPPING_HPP
