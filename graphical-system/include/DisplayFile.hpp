@@ -1,6 +1,9 @@
 #ifndef DISPLAYFILE_HPP
 #define DISPLAYFILE_HPP
 
+#include "Object.hpp"
+#include <list>
+
 class DisplayFile: public std::list<Object*>
 {
     public:

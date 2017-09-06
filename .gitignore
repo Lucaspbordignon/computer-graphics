@@ -36,3 +36,4 @@ graphical-system/main
 *.*~
 build/
 sgi
+*.swp

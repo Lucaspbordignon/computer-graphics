@@ -7,6 +7,7 @@
 #include "Object.hpp"
 #include "ViewPort.hpp"
 #include "Transform.hpp"
+#include "Clipping.hpp"
 
 #define GUI_FILE "graphical_system.glade"
 
@@ -31,14 +32,18 @@ GtkButton* _move_left_btn;
 GtkButton* _move_right_btn;
 GtkSpinButton* _step_size;
 
-/* Display widgets */
-ViewPort* _viewport;
-DisplayFile _display_file;
-std::vector<Coordinate> _coordinates_storage;
+/* Visualization Lists */
 GtkTreeView* _obj_name_view;
 GtkTreeView* _obj_coord_view;
 GtkListStore* _name_list;
 GtkListStore* _coord_list;
+
+/* Display widgets */
+ViewPort* _viewport;
+DisplayFile _display_file;
+DisplayFile _clipped_objects;
+std::vector<Coordinate> _coordinates_storage;
+Clipper _clipper;
 
 
 /**
@@ -80,15 +85,24 @@ extern "C" {
         cairo_paint(cr);
         cairo_destroy(cr);
 
-        /* Returning TRUE to avoide another call of the function */
+        /* Returning TRUE to avoid another call of the function */
         return TRUE;
     }
 
     gboolean draw(GtkWidget* widget, cairo_t* cr)
     {
         /* Redraw a cairo context */
-        normalize_coordinates(*(_viewport->window()), _display_file);
-        _viewport->draw_all_objects(cr, _display_file);
+        if(_display_file.size()) {
+
+            // TODO: Doing a test actually
+
+            _clipper.apply_clipping(_display_file, _clipped_objects);
+            normalize_coordinates(*(_viewport->window()), _clipped_objects);
+            _viewport->draw_all_objects(cr, _clipped_objects);
+        } else {
+            normalize_coordinates(*(_viewport->window()), _display_file);
+            _viewport->draw_all_objects(cr, _display_file);
+        }
         return FALSE;
     }
 

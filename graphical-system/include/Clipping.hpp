@@ -1,9 +1,9 @@
 #ifndef CLIPPING_HPP
 #define CLIPPING_HPP
 
-#include "Object.hpp"
-#include "Frame.hpp"
 #include <algorithm>
+#include "DisplayFile.hpp"
+#include "Frame.hpp"
 
 enum LINE_CLIPPING_METHOD
 {
@@ -13,11 +13,11 @@ enum LINE_CLIPPING_METHOD
 
 enum REGION_CODE
 {
-    INSIDE = 0,
-    LEFT = 1,
-    RIGHT = 2,
-    BOTTOM = 4,
-    TOP = 8
+    C_INSIDE = 0,
+    C_LEFT = 1,
+    C_RIGHT = 2,
+    C_BOTTOM = 4,
+    C_TOP = 8
 };
 
 class Clipper
@@ -26,15 +26,16 @@ class Clipper
         Clipper(Frame window) : _window(window) {};
         Clipper() {};
 
-        void clip_2d_point(Point* point);
-        Line* clip_2d_line(Line* line, LINE_CLIPPING_METHOD method = COHEEN_SUTHERLAND);
-        void clip_2d_polygon(Polygon* polygon);
-        std::vector<Coordinate> liang_barsky(Line* line);
+        void apply_clipping(DisplayFile&, DisplayFile&);
+        Point clip_2d_point(Point* point);
+        Line clip_2d_line(Line* line, LINE_CLIPPING_METHOD method = LIANG_BARSKY);
+        Polygon clip_2d_polygon(Polygon* polygon);
+
     private:
         Frame _window;
-        Line* coheen_sutherland(Line* line);
+        Line coheen_sutherland(Line* line);
+        Line liang_barsky(Line* line);
         REGION_CODE get_region_code(Coordinate coord);
-        //Line* liang_barsky(Line* line);
 };
 
 #endif // CLIPPING_HPP

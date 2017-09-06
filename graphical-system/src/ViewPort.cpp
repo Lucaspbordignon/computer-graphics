@@ -78,7 +78,7 @@ void ViewPort::draw_line(Object* object, cairo_t* cr)
     cairo_stroke(cr);
 }
 
-/*
+/**
  * Given an object of type polygon, take the coordinates, and draw the a
  * polygon on the viewport.
  */
@@ -97,7 +97,7 @@ void ViewPort::draw_polygon(Object* object, cairo_t* cr)
     cairo_stroke(cr);
 }
 
-/*
+/**
  * Given an object of type point, take a coordinate, draw a small circle around
  * it, a shows it on the viewport.
  */
@@ -108,6 +108,25 @@ void ViewPort::draw_point(Object* object, cairo_t* cr)
 
     cairo_arc(cr, first_coord.x(), first_coord.y(), 3, 0, 2*M_PI);
     cairo_fill(cr);
+}
+
+/**
+ * Given a obejct of Frame, i.e. a window of the system, draws a border
+ * arround the object.
+ */
+void ViewPort::draw_window_border(Frame* window, cairo_t* cr)
+{
+    auto x_min = window->get_x_min();
+    auto y_min = window->get_y_min();
+    auto x_max = window->get_x_max();
+    auto y_max = window->get_y_max();
+    
+    cairo_move_to(cr, x_min, y_min);
+    cairo_line_to(cr, x_max, y_min);
+    cairo_line_to(cr, x_max, y_max);
+    cairo_line_to(cr, x_min, y_max);
+    cairo_line_to(cr, x_min, y_min);
+    cairo_stroke(cr);
 }
 
 /**
