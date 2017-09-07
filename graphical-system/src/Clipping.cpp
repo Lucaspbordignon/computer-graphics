@@ -138,7 +138,7 @@ Line Clipper::liang_barsky(Line line)
     auto coord_2 = line.world_coordinate()[1];
     auto r_zeta_1 = std::vector<float>();
     auto r_zeta_2 = std::vector<float>();
-
+    
     std::vector<float> p = {
         -(coord_2.x() - coord_1.x()),
          (coord_2.x() - coord_1.x()),
@@ -153,14 +153,20 @@ Line Clipper::liang_barsky(Line line)
         _window.get_y_max() - coord_1.y()
     };
 
+    if ((p[0] <= 0) && (p[2] <= 0)) {
+        r_zeta_1.push_back(q[0]/p[0]);
+        r_zeta_1.push_back(q[2]/p[2]);
 
-    for(auto i = 0; i < p.size(); ++i){
-        if(p[i] < 0)
-            r_zeta_1.push_back(q[i] / p[i]);
-        else if (p[i] > 0)
-            r_zeta_2.push_back(q[i] / p[i]);
+        r_zeta_2.push_back(q[1]/p[1]);
+        r_zeta_2.push_back(q[3]/p[3]);
+    } else {
+        r_zeta_1.push_back(q[1]/p[1]);
+        r_zeta_1.push_back(q[3]/p[3]);
+
+        r_zeta_2.push_back(q[0]/p[0]);
+        r_zeta_2.push_back(q[2]/p[2]);
     }
-
+    
     /* Zeta 1 */
     auto max_r = *std::max_element(r_zeta_1.begin(), r_zeta_1.end());
     auto zeta_1 = std::max((float)0, max_r);
@@ -176,8 +182,8 @@ Line Clipper::liang_barsky(Line line)
 
     if (zeta_2 < 1)
         coord_2 = Coordinate(
-                    coord_2.x() + (zeta_2 * p[0]),
-                    coord_2.y() + (zeta_2 * p[2]));
+                    coord_1.x() + (zeta_2 * p[1]),
+                    coord_1.y() + (zeta_2 * p[3]));
 
     clipped.add_coordinates({coord_1, coord_2}, WORLD);
     return clipped;
