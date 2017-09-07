@@ -6,6 +6,7 @@
 #include <cmath>
 #include "Object.hpp"
 #include "Frame.hpp"
+#include "DisplayFile.hpp"
 
 
 class ViewPort
@@ -14,8 +15,8 @@ class ViewPort
         ViewPort(float x_min, float y_min, float x_max, float y_max);
         ~ViewPort() {}
         Frame* window();
-        void draw_all_objects(cairo_t* cr, const std::list<Object*>&);
-        void draw_object(Object* object, cairo_t* cr);
+        void draw_all_objects(cairo_t* cr, const DisplayFile&);
+        void draw_object(Object object, cairo_t* cr);
         void zoom(ZOOM_TYPE, float);
         void move(DIRECTION direction, float step_size);
         Coordinate viewport_transform(Coordinate& coord);

@@ -10,23 +10,26 @@ void Clipper::apply_clipping(DisplayFile& original_df, DisplayFile& clipped)
     clipped.clear();
 
     for(auto i = original_df.begin(); i != original_df.end(); ++i)
-        switch((*i)->type()) {
+        switch((*i).type()) {
             case POINT:
             {
-                auto point = clip_2d_point((Point*) *i);
-                clipped.push_back(&point);
+                Object* obj = &(*i);
+                Point* point = (Point*) obj;
+                clipped.push_back(clip_2d_point(*point));
                 break;
             }
             case LINE:
             {
-                auto line = clip_2d_line((Line*) *i);
-                clipped.push_back(&line);
+                Object* obj = &(*i);
+                Line* line = (Line*) obj;
+                clipped.push_back(clip_2d_line(*line));
                 break;
             }
             case POLYGON:
             {
-                auto pol = clip_2d_polygon((Polygon*) *i);
-                clipped.push_back(&pol);
+                Object* obj = &(*i);
+                Polygon* pol = (Polygon*) obj;
+                clipped.push_back(clip_2d_polygon(*pol));
                 break;
             }
         }
@@ -35,33 +38,31 @@ void Clipper::apply_clipping(DisplayFile& original_df, DisplayFile& clipped)
 /**
  * Applies the trivial algorithm of point clipping.
  */
-Point Clipper::clip_2d_point(Point* point)
+Point Clipper::clip_2d_point(Point point)
 {
-   auto coord = point->world_coordinate()[0];
+   auto coord = point.world_coordinate()[0];
 
    if(coord.x() >= _window.get_x_min() && coord.x() <= _window.get_x_max())
        if(coord.y() >= _window.get_y_min() && coord.y() <= _window.get_y_max())
-           return *point;
+           return point;
 
-   return Point(point->name(), POINT);
+   return Point(point.name(), POINT);
 }
 
 /**
  * Applies the line clipping algorithm, using a specific algorithm.
  */
-Line Clipper::clip_2d_line(Line* line, LINE_CLIPPING_METHOD method)
+Line Clipper::clip_2d_line(Line line, LINE_CLIPPING_METHOD method)
 {
     switch(method) {
         case COHEEN_SUTHERLAND:
             return coheen_sutherland(line);
         case LIANG_BARSKY:
             return liang_barsky(line);
-        default:
-            return coheen_sutherland(line);
     }
 }
 
-Polygon Clipper::clip_2d_polygon(Polygon* polygon)
+Polygon Clipper::clip_2d_polygon(Polygon polygon)
 {
 
 }
@@ -70,11 +71,11 @@ Polygon Clipper::clip_2d_polygon(Polygon* polygon)
 /**
  * Applies the Coheen-Sutherland algorithm for line clipping.
  */
-Line Clipper::coheen_sutherland(Line* line)
+Line Clipper::coheen_sutherland(Line line)
 {
-    Line clipped = Line(line->name(), LINE);
-    clipped.add_coordinates(line->world_coordinate()[0], WORLD);
-    clipped.add_coordinates(line->world_coordinate()[1], WORLD);
+    Line clipped = Line(line.name(), LINE);
+    clipped.add_coordinates(line.world_coordinate()[0], WORLD);
+    clipped.add_coordinates(line.world_coordinate()[1], WORLD);
     while(true) {
         auto region_p1 = get_region_code(clipped.world_coordinate()[0]);
         auto region_p2 = get_region_code(clipped.world_coordinate()[1]);
@@ -82,7 +83,7 @@ Line Clipper::coheen_sutherland(Line* line)
         if (region_p1 | region_p2 == 0) {
             return clipped;
         } else if (region_p1 & region_p2 != 0) {
-            return Line(line->name(), LINE);
+            return Line(line.name(), LINE);
         } else {
             auto out = region_p1;
 
@@ -105,10 +106,10 @@ Line Clipper::coheen_sutherland(Line* line)
                 x = _window.get_x_max();
                 y = m * (_window.get_x_max() - x1) + y1;
             } else if (out & C_TOP) {
-                x = x1 + 1/(m * (_window.get_y_max() - y1));
+                x = x1 + 1/m * (_window.get_y_max() - y1);
                 y = _window.get_y_max();
             } else if (out & C_BOTTOM) {
-                x = x1 + 1/(m * (_window.get_y_min() - y1));
+                x = x1 + 1/m * (_window.get_y_min() - y1);
                 y = _window.get_y_min();
             }
 
@@ -128,11 +129,11 @@ Line Clipper::coheen_sutherland(Line* line)
  * (Liang, Y. D. and Barsky, B., "A New Concept and Method for Line Clipping",
  *  January 1984.)
  */
-Line Clipper::liang_barsky(Line* line)
+Line Clipper::liang_barsky(Line line)
 {
-    Line clipped = Line(line->name(), LINE);
-    auto coord_1 = line->world_coordinate()[0];
-    auto coord_2 = line->world_coordinate()[1];
+    Line clipped = Line(line.name(), LINE);
+    auto coord_1 = line.world_coordinate()[0];
+    auto coord_2 = line.world_coordinate()[1];
     auto r_zeta_1 = std::vector<float>();
     auto r_zeta_2 = std::vector<float>();
 

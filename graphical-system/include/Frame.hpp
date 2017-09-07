@@ -18,7 +18,8 @@ class Frame : public Object {
             _x_min(x_min),
             _y_min(y_min),
             _x_max(x_max),
-            _y_max(y_max)
+            _y_max(y_max),
+            _angle(0.0)
             {
                 add_coordinates({
                         Coordinate(-1, -1),

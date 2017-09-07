@@ -19,7 +19,7 @@ Frame* ViewPort::window()
  * Draws all the objects of a display file on a drawing area. The display file
  * is a linked list.
  */
-void ViewPort::draw_all_objects(cairo_t* cr, const std::list<Object*>& display_file)
+void ViewPort::draw_all_objects(cairo_t* cr, const DisplayFile& display_file)
 {
     if(display_file.empty())
         return;
@@ -32,18 +32,18 @@ void ViewPort::draw_all_objects(cairo_t* cr, const std::list<Object*>& display_f
  * Draw a given object, applying the right method based on the type of
  * the object.
  */
-void ViewPort::draw_object(Object* object, cairo_t* cr)
+void ViewPort::draw_object(Object object, cairo_t* cr)
 {
-    switch(object->type())
+    switch(object.type())
     {
         case LINE:
-            draw_line(object, cr);
+            draw_line(&object, cr);
             break;
         case POLYGON:
-            draw_polygon(object, cr);
+            draw_polygon(&object, cr);
             break;
         case POINT:
-            draw_point(object, cr);
+            draw_point(&object, cr);
             break;
     }
 }

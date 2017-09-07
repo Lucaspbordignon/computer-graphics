@@ -4,15 +4,15 @@
 #include "Object.hpp"
 #include <list>
 
-class DisplayFile: public std::list<Object*>
+class DisplayFile: public std::list<Object>
 {
     public:
         DisplayFile() {}
         ~DisplayFile() {}
-        Object* get_object(const std::string name)
+        Object get_object(const std::string name)
         {
             for (auto i = begin(); i != end(); ++i)
-                if ((*i)->name() == name) return *i;
+                if ((*i).name() == name) return *i;
         }
 };
 

@@ -49,6 +49,7 @@ class Coordinate
 class Object
 {
     public:
+        Object() {}
         Object(std::string name, OBJECT_TYPE type):
             _name(name),
             _type(type) {}

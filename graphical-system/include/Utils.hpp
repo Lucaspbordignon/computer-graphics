@@ -123,8 +123,8 @@ extern "C" {
     void add_line(std::string name)
     {
         /* Inserts a line to the display file */
-        auto line = new Line(name, LINE);
-        line->add_coordinates(_coordinates_storage, WORLD);
+        auto line = Line(name, LINE);
+        line.add_coordinates(_coordinates_storage, WORLD);
         _display_file.push_back(line);
 
         /* Add the element to the list store */
@@ -138,8 +138,8 @@ extern "C" {
     void add_polygon(std::string name)
     {
         /* Inserts a polygon to the display file */
-        auto polygon = new Polygon(name, POLYGON);
-        polygon->add_coordinates(_coordinates_storage, WORLD);
+        auto polygon = Polygon(name, POLYGON);
+        polygon.add_coordinates(_coordinates_storage, WORLD);
         _display_file.push_back(polygon);
         
         /* Add the element to the list store */
@@ -153,8 +153,8 @@ extern "C" {
     void add_point(std::string name)
     {
         /* Inserts a point to the display file */
-        auto point = new Point(name, POINT);
-        point->add_coordinates(_coordinates_storage[0], WORLD);
+        auto point = Point(name, POINT);
+        point.add_coordinates(_coordinates_storage[0], WORLD);
         _display_file.push_back(point);
 
         /* Add the element to the list store */
@@ -253,7 +253,7 @@ extern "C" {
     {
         GtkTreeModel* model;
         GtkTreeIter it;
-        Object* obj;
+        Object obj;
         float x, y, ang;
 
         /* Gets the object to be transformed */
@@ -287,17 +287,17 @@ extern "C" {
 
         auto selected = gtk_combo_box_text_get_active_text(combo_box);
         if(!strncmp(selected, "Rotate from origin", 24)){
-            rotate_2d_object(obj, ang, 0, 0);
+            rotate_2d_object(&obj, ang, 0, 0);
         } else if(!strncmp(selected, "Rotate from world center", 24)){
             x = _viewport->window_center_x(); 
             y = _viewport->window_center_y(); 
-            rotate_2d_object(obj, ang, x, y);
+            rotate_2d_object(&obj, ang, x, y);
         } else if(!strncmp(selected, "Rotate from coordinates", 24)){
-            rotate_2d_object(obj, ang, x, y);
+            rotate_2d_object(&obj, ang, x, y);
         } else if(!strncmp(selected, "Scaling", 8)){
-            scale_2d_object(obj, x, y);
+            scale_2d_object(&obj, x, y);
         } else if (!strncmp(selected, "Translation", 12)){
-            translation_2d_object(obj, x, y);
+            translation_2d_object(&obj, x, y);
         }
 
         /* Redraw and close popup */
