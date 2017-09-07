@@ -70,12 +70,14 @@ Coordinate ViewPort::viewport_transform(Coordinate& coord)
 void ViewPort::draw_line(Object* object, cairo_t* cr)
 {
     auto coordinates = object->window_coordinate();
-    Coordinate first_coord = viewport_transform(coordinates[0]);
-    Coordinate second_coord = viewport_transform(coordinates[1]);
+    if (coordinates.size()) {
+        Coordinate first_coord = viewport_transform(coordinates[0]);
+        Coordinate second_coord = viewport_transform(coordinates[1]);
 
-    cairo_move_to(cr, first_coord.x(), first_coord.y());
-    cairo_line_to(cr, second_coord.x(), second_coord.y()); 
-    cairo_stroke(cr);
+        cairo_move_to(cr, first_coord.x(), first_coord.y());
+        cairo_line_to(cr, second_coord.x(), second_coord.y()); 
+        cairo_stroke(cr);
+    }
 }
 
 /**
@@ -85,16 +87,18 @@ void ViewPort::draw_line(Object* object, cairo_t* cr)
 void ViewPort::draw_polygon(Object* object, cairo_t* cr)
 {
     auto coordinates = object->window_coordinate();
-    Coordinate first_coord = viewport_transform(coordinates[0]);
+    if (coordinates.size()) {
+        Coordinate first_coord = viewport_transform(coordinates[0]);
 
-    cairo_move_to(cr, first_coord.x(), first_coord.y());
-    for (auto i = 0u; i < coordinates.size(); ++i) {
-        auto actual_coord = viewport_transform(coordinates[i]);
-        cairo_line_to(cr, actual_coord.x(), actual_coord.y());
+        cairo_move_to(cr, first_coord.x(), first_coord.y());
+        for (auto i = 0u; i < coordinates.size(); ++i) {
+            auto actual_coord = viewport_transform(coordinates[i]);
+            cairo_line_to(cr, actual_coord.x(), actual_coord.y());
+        }
+        
+        cairo_close_path(cr);
+        cairo_stroke(cr);
     }
-    
-    cairo_close_path(cr);
-    cairo_stroke(cr);
 }
 
 /**
@@ -104,10 +108,12 @@ void ViewPort::draw_polygon(Object* object, cairo_t* cr)
 void ViewPort::draw_point(Object* object, cairo_t* cr)
 {
     auto coordinates = object->window_coordinate();
-    Coordinate first_coord = viewport_transform(coordinates[0]);
+    if (coordinates.size()) {
+        Coordinate first_coord = viewport_transform(coordinates[0]);
 
-    cairo_arc(cr, first_coord.x(), first_coord.y(), 3, 0, 2*M_PI);
-    cairo_fill(cr);
+        cairo_arc(cr, first_coord.x(), first_coord.y(), 3, 0, 2*M_PI);
+        cairo_fill(cr);
+    }
 }
 
 /**

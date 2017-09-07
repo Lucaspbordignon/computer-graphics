@@ -76,14 +76,23 @@ Line Clipper::coheen_sutherland(Line line)
     Line clipped = Line(line.name(), LINE);
     clipped.add_coordinates(line.world_coordinate()[0], WORLD);
     clipped.add_coordinates(line.world_coordinate()[1], WORLD);
+
+    auto x1 = clipped.world_coordinate()[0].x();
+    auto y1 = clipped.world_coordinate()[0].y();
+    auto x2 = clipped.world_coordinate()[1].x();
+    auto y2 = clipped.world_coordinate()[1].y();
+
+    float m = (y2 - y1)/(x2 - x1);
+    float x, y;
+
     while(true) {
         auto region_p1 = get_region_code(clipped.world_coordinate()[0]);
         auto region_p2 = get_region_code(clipped.world_coordinate()[1]);
 
-        if (region_p1 | region_p2 == 0) {
-            return clipped;
-        } else if (region_p1 & region_p2 != 0) {
+        if ((region_p1 & region_p2) != 0) {
             return Line(line.name(), LINE);
+        } else if (region_p1 == 0 && region_p2 == 0) {
+            return clipped;
         } else {
             auto out = region_p1;
 
@@ -91,13 +100,6 @@ Line Clipper::coheen_sutherland(Line line)
                 out = region_p2;
             }
 
-            float x1 = clipped.world_coordinate()[0].x();
-            float y1 = clipped.world_coordinate()[0].y();
-            float x2 = clipped.world_coordinate()[1].x();
-            float y2 = clipped.world_coordinate()[1].y();
-
-            float m = (y2 - y1)/(x2 - x1);
-            float x, y;
 
             if (out & C_LEFT) {
                 x = _window.get_x_min();
