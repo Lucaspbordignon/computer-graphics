@@ -96,10 +96,12 @@ extern "C" {
 
             // TODO: Doing a test actually
 
+            _viewport->draw_window_border(_viewport->window(), cr);
             _clipper.apply_clipping(_display_file, _clipped_objects);
             normalize_coordinates(*(_viewport->window()), _clipped_objects);
             _viewport->draw_all_objects(cr, _clipped_objects);
         } else {
+            _viewport->draw_window_border(_viewport->window(), cr);
             normalize_coordinates(*(_viewport->window()), _display_file);
             _viewport->draw_all_objects(cr, _display_file);
         }

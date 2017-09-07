@@ -7,7 +7,7 @@ ViewPort::ViewPort(float x_min, float y_min, float x_max, float y_max)
     _x_max = x_max;
     _y_max = y_max;
 
-    _window = Frame(x_min, y_min, x_max, y_max);
+    _window = Frame(x_min + 20, y_min + 20, x_max - 20, y_max - 20);
 }
 
 Frame* ViewPort::window()
@@ -53,8 +53,8 @@ void ViewPort::draw_object(Object object, cairo_t* cr)
  */
 Coordinate ViewPort::viewport_transform(Coordinate& coord)
 {
-    auto width = _x_max - _x_min;
-    auto height = _y_max - _y_min;
+    auto width = _window.get_x_max() - _window.get_x_min();
+    auto height = _window.get_y_max() - _window.get_y_min();
 
     /* Normalized transformation */
     auto x_vp = ((coord.x() - (-1)) / (1 - (-1))) * width;

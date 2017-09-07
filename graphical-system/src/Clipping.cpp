@@ -55,8 +55,8 @@ Point Clipper::clip_2d_point(Point point)
 Line Clipper::clip_2d_line(Line line, LINE_CLIPPING_METHOD method)
 {
     switch(method) {
-        case COHEEN_SUTHERLAND:
-            return coheen_sutherland(line);
+        case COHEN_SUTHERLAND:
+            return cohen_sutherland(line);
         case LIANG_BARSKY:
             return liang_barsky(line);
     }
@@ -69,9 +69,9 @@ Polygon Clipper::clip_2d_polygon(Polygon polygon)
 
 
 /**
- * Applies the Coheen-Sutherland algorithm for line clipping.
+ * Applies the Cohen-Sutherland algorithm for line clipping.
  */
-Line Clipper::coheen_sutherland(Line line)
+Line Clipper::cohen_sutherland(Line line)
 {
     Line clipped = Line(line.name(), LINE);
     clipped.add_coordinates(line.world_coordinate()[0], WORLD);
