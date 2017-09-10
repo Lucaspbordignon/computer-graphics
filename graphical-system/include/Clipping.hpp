@@ -4,6 +4,7 @@
 #include <algorithm>
 #include "DisplayFile.hpp"
 #include "Frame.hpp"
+#include "Edge.hpp"
 
 enum LINE_CLIPPING_METHOD
 {
@@ -35,7 +36,9 @@ class Clipper
         Frame _window;
         Line cohen_sutherland(Line line);
         Line liang_barsky(Line line);
+        Polygon sutherland_hodgman(Polygon polygon);
         REGION_CODE get_region_code(Coordinate coord);
+        bool is_inside(Coordinate coord, Edge edge);
 };
 
 #endif // CLIPPING_HPP

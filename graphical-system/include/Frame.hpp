@@ -2,6 +2,7 @@
 #define WINDOW_HPP
 
 #include "Object.hpp"
+#include "Edge.hpp"
 
 class Frame : public Object {
     public:
@@ -55,6 +56,15 @@ class Frame : public Object {
         float y_center() { return (_y_min + _y_max)/2; }
 
         void rotate(float ang) { _angle +=  ang; }
+
+        std::vector<Edge> edges() {
+            return {
+                Edge(_x_min, _y_min, _x_min, _y_max),
+                Edge(_x_min, _y_max, _x_max, _y_max),
+                Edge(_x_max, _y_max, _x_max, _y_min),
+                Edge(_x_max, _y_min, _x_min, _y_min)
+            };
+        }
 
     private:
         float _x_min;

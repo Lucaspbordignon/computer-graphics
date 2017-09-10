@@ -62,9 +62,12 @@ Line Clipper::clip_2d_line(Line line, LINE_CLIPPING_METHOD method)
     }
 }
 
+/**
+ * Calls the Sutherland-Hodgman polygon clipping algorithm
+ */
 Polygon Clipper::clip_2d_polygon(Polygon polygon)
 {
-
+    return sutherland_hodgman(polygon);
 }
 
 
@@ -209,4 +212,50 @@ REGION_CODE Clipper::get_region_code(Coordinate coord)
     }
 
     return code;
+}
+
+
+Polygon Clipper::sutherland_hodgman(Polygon polygon)
+{
+    std::vector<Coordinate> output = polygon.world_coordinate();
+    auto edges = _window.edges();
+    for (auto edge : edges) {
+        if (output.empty()) {
+            break;
+        }
+
+        auto input = std::vector<Coordinate>();
+        input.swap(output);
+
+        Coordinate p1 = input.back();
+
+        for (auto p2 : input) {
+            if (&p1 == &p2) {
+                continue;
+            }
+            Line line = Line("Clipping_Line", LINE);
+            line.add_coordinates(p1, WORLD);
+            line.add_coordinates(p2, WORLD);
+
+            if (is_inside(p2, edge)) {
+                if (!is_inside(p1, edge)) {
+                    output.push_back(clip_2d_line(line).world_coordinate()[0]);
+                }
+                output.push_back(p2);
+            } else if (is_inside(p1, edge)) {
+                output.push_back(clip_2d_line(line).world_coordinate()[1]);
+            }
+            p1 = p2;
+        }
+    }
+    Polygon clipped = Polygon(polygon.name(), POLYGON);
+    if (!output.empty()) {
+        clipped.add_coordinates(output, WORLD);
+    }
+    return clipped;
+}
+
+bool Clipper::is_inside(Coordinate coord, Edge edge)
+{
+    return (edge.v2().x() - edge.v1().x()) * (coord.y() - edge.v1().y()) < (edge.v2().y() - edge.v1().y()) * (coord.x() - edge.v1().x());
 }
