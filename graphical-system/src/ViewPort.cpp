@@ -12,7 +12,12 @@ ViewPort::ViewPort(float x_min, float y_min, float x_max, float y_max, float w_r
                     x_max - w_ratio, y_max - w_ratio);
 }
 
-Frame* ViewPort::window()
+Frame ViewPort::window()
+{
+    return _window;
+}
+
+Frame* ViewPort::window_ptr()
 {
     return &_window;
 }

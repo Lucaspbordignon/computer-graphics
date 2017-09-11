@@ -5,8 +5,9 @@
  * Applies the right clipping algorithm for all the elementos of a given
  * display file, returning a new one with the clipped objects.
  */
-void Clipper::apply_clipping(DisplayFile& original_df, DisplayFile& clipped)
+void Clipper::apply_clipping(Frame wind, DisplayFile& original_df, DisplayFile& clipped)
 {
+    _window = wind;
     clipped.clear();
 
     for(auto i = original_df.begin(); i != original_df.end(); ++i)

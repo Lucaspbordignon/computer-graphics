@@ -93,8 +93,9 @@ extern "C" {
     {
         /* Redraw a cairo context */
         _viewport->draw_window_border(cr);
-        _clipper.apply_clipping(_display_file, _clipped_objects);
-        normalize_coordinates(*(_viewport->window()), _clipped_objects);
+        _clipper.apply_clipping(_viewport->window(), 
+                                _display_file, _clipped_objects);
+        normalize_coordinates(_viewport->window(), _clipped_objects);
         _viewport->draw_all_objects(cr, _clipped_objects);
         return FALSE;
     }
@@ -302,7 +303,7 @@ extern "C" {
     {
         /* Set a specific angle to the window */
         auto ang = gtk_spin_button_get_value(ang_button);
-        _viewport->window()->rotate(ang);
+        _viewport->window_ptr()->rotate(ang);
         gtk_widget_queue_draw(_draw_area);
     }
 }

@@ -27,7 +27,7 @@ class Clipper
         Clipper(Frame window) : _window(window) {};
         Clipper() {};
 
-        void apply_clipping(DisplayFile&, DisplayFile&);
+        void apply_clipping(Frame, DisplayFile&, DisplayFile&);
         Point clip_2d_point(Point point);
         Line clip_2d_line(Line line, LINE_CLIPPING_METHOD method = COHEN_SUTHERLAND);
         Polygon clip_2d_polygon(Polygon polygon);

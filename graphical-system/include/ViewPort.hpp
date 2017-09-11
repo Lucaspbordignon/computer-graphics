@@ -14,7 +14,8 @@ class ViewPort
     public:
         ViewPort(float, float, float, float, float);
         ~ViewPort() {}
-        Frame* window();
+        Frame window();
+        Frame* window_ptr();
         void draw_all_objects(cairo_t* cr, const DisplayFile&);
         void draw_object(Object object, cairo_t* cr);
         void draw_window_border(cairo_t*);
