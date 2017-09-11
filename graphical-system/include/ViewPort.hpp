@@ -12,12 +12,12 @@
 class ViewPort
 {
     public:
-        ViewPort(float x_min, float y_min, float x_max, float y_max);
+        ViewPort(float, float, float, float, float);
         ~ViewPort() {}
         Frame* window();
         void draw_all_objects(cairo_t* cr, const DisplayFile&);
         void draw_object(Object object, cairo_t* cr);
-        void draw_window_border(Frame*, cairo_t*);
+        void draw_window_border(cairo_t*);
         void zoom(ZOOM_TYPE, float);
         void move(DIRECTION direction, float step_size);
         Coordinate viewport_transform(Coordinate& coord);
@@ -29,7 +29,7 @@ class ViewPort
         void draw_polygon(Object* object, cairo_t* cr);
         void draw_point(Object* object, cairo_t* cr);
         Frame _window;
-        float _x_min, _y_min, _x_max, _y_max;
+        float _x_min, _y_min, _x_max, _y_max, _window_ratio;
 };
 
 #endif // VIEWPORT_HPP

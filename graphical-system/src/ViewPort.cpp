@@ -1,13 +1,15 @@
 #include "ViewPort.hpp"
 
-ViewPort::ViewPort(float x_min, float y_min, float x_max, float y_max)
+ViewPort::ViewPort(float x_min, float y_min, float x_max, float y_max, float w_ratio)
 {
     _x_min = x_min;
     _y_min = y_min;
     _x_max = x_max;
     _y_max = y_max;
+    _window_ratio = w_ratio;
 
-    _window = Frame(x_min + 20, y_min + 20, x_max - 20, y_max - 20);
+    _window = Frame(x_min + w_ratio, y_min + w_ratio,
+                    x_max - w_ratio, y_max - w_ratio);
 }
 
 Frame* ViewPort::window()
@@ -60,7 +62,7 @@ Coordinate ViewPort::viewport_transform(Coordinate& coord)
     auto x_vp = ((coord.x() - (-1)) / (1 - (-1))) * width;
     auto y_vp = (1 - (coord.y() - (-1)) / (1 - (-1))) * height;
 
-    return Coordinate(x_vp, y_vp);
+    return Coordinate(x_vp + _window_ratio, y_vp + _window_ratio);
 }
 
 /**
@@ -120,12 +122,12 @@ void ViewPort::draw_point(Object* object, cairo_t* cr)
  * Given a obejct of Frame, i.e. a window of the system, draws a border
  * arround the object.
  */
-void ViewPort::draw_window_border(Frame* window, cairo_t* cr)
+void ViewPort::draw_window_border(cairo_t* cr)
 {
-    auto x_min = window->get_x_min();
-    auto y_min = window->get_y_min();
-    auto x_max = window->get_x_max();
-    auto y_max = window->get_y_max();
+    auto x_min = _x_min + _window_ratio;
+    auto y_min = _y_min + _window_ratio;
+    auto x_max = _x_max - _window_ratio;
+    auto y_max = _y_max - _window_ratio;
     
     cairo_move_to(cr, x_min, y_min);
     cairo_line_to(cr, x_max, y_min);
