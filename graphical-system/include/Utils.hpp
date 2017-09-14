@@ -179,8 +179,20 @@ extern "C" {
                 add_line(name);
                 break;
             default:
-                add_polygon(name);
-                break;
+                auto type_box = (GtkComboBoxText*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "obj_type_selection");
+                auto selected = gtk_combo_box_text_get_active_text(type_box);
+                if (!strncmp(selected, "Polygon", 8)) {
+                    add_polygon(name);
+                    break;
+                } else if(!strncmp(selected, "Bezier Curve", 12)) {
+                    // TODO
+                    break;
+                } else if(!strncmp(selected, "B-Spline Curve", 14)) {
+                    // TODO
+                    break;
+                }
         }
 
         /* Invalidates the actual draw to update the draw area */

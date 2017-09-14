@@ -593,33 +593,44 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="add_coordinate_button">
-                    <property name="label" translatable="yes">Add Coordinate</property>
+                  <object class="GtkBox" id="create_obj_box">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="margin_bottom">1</property>
-                    <signal name="clicked" handler="add_coordinate" object="obj_x" swapped="no"/>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkButton" id="add_coordinate_button">
+                        <property name="label" translatable="yes">Add Coordinate</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="margin_bottom">1</property>
+                        <signal name="clicked" handler="add_coordinate" object="obj_x" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="create_object">
+                        <property name="label" translatable="yes">Create Object</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="margin_bottom">1</property>
+                        <signal name="clicked" handler="create_object_button" object="obj_name_entry" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">5</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="create_object">
-                    <property name="label" translatable="yes">Create Object</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="margin_bottom">1</property>
-                    <signal name="clicked" handler="create_object_button" object="obj_name_entry" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">6</property>
                   </packing>
                 </child>
                 <child>
@@ -634,6 +645,54 @@
                     <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">7</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox" id="type_obj_box">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">4</property>
+                    <child>
+                      <object class="GtkLabel" id="obj_type_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Object Type: </property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkComboBoxText" id="obj_type_selection">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="active">0</property>
+                        <property name="has_entry">True</property>
+                        <property name="active_id">0</property>
+                        <items>
+                          <item id="0" translatable="yes">Polygon</item>
+                          <item id="1" translatable="yes">Bezier Curve</item>
+                          <item id="2" translatable="yes">B-Spline Curve</item>
+                        </items>
+                        <child internal-child="entry">
+                          <object class="GtkEntry" id="entry">
+                            <property name="can_focus">False</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">8</property>
                   </packing>
                 </child>
               </object>
@@ -703,7 +762,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">0</property>
+                    <property name="position">9</property>
                   </packing>
                 </child>
                 <child>
@@ -718,7 +777,7 @@
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">1</property>
+                    <property name="position">10</property>
                   </packing>
                 </child>
               </object>
