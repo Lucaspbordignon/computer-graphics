@@ -52,6 +52,9 @@ void ViewPort::draw_object(Object object, cairo_t* cr)
         case POINT:
             draw_point(&object, cr);
             break;
+        case CURVE:
+            draw_curve(&object, cr);
+            break;
     }
 }
 
@@ -121,6 +124,20 @@ void ViewPort::draw_point(Object* object, cairo_t* cr)
         cairo_arc(cr, first_coord.x(), first_coord.y(), 3, 0, 2*M_PI);
         cairo_fill(cr);
     }
+}
+
+/**
+ * Draw a Cubic Bezier Curve and shows it on the viewport
+ */
+void ViewPort::draw_curve(Curve* object, cairo_t* cr)
+{
+    Coordinate first_coord = viewport_transform(object->get_point(0));
+    cairo_move_to(cr, first_coord.x(), first_coord.y());
+    for (auto t = 0.1; t <= 1; i += 0.1) {
+        Coordinate next_coord = viewport_transform(object->get_point(t));
+        cairo_line_to(cr, next_coord.x(), next_coord.y());
+    }
+    cairo_stroke(cr);
 }
 
 /**

@@ -159,6 +159,51 @@ extern "C" {
         gtk_list_store_set(_name_list, &it, 0, aux, 1, "POINT", -1);
     }
 
+    void add_curve(GtkButton* btn, GtkWidget* widget) {
+        auto p1_x_spin = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "bezier_p1_x_coord");
+        auto p1_y_spin = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "bezier_p1_y_coord");
+        auto p2_x_spin = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "bezier_p2_x_coord");
+        auto p2_y_spin = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "bezier_p2_y_coord");
+        auto p3_x_spin = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "bezier_p3_x_coord");
+        auto p3_y_spin = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "bezier_p3_y_coord");
+        auto p4_x_spin = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "bezier_p4_x_coord");
+        auto p4_y_spin = (GtkSpinButton*)gtk_builder_get_object(
+                                        GTK_BUILDER(builder),
+                                        "bezier_p4_y_coord");
+
+        float p1_x, p1_y, p2_x, p2_y, p3_x, p3_y, p4_x, p4_y;
+        p1_x = gtk_spin_button_get_value(p1_x_spin);
+        p1_y = gtk_spin_button_get_value(p1_y_spin);
+        p2_x = gtk_spin_button_get_value(p2_x_spin);
+        p2_y = gtk_spin_button_get_value(p2_y_spin);
+        p3_x = gtk_spin_button_get_value(p3_x_spin);
+        p3_y = gtk_spin_button_get_value(p3_y_spin);
+        p4_x = gtk_spin_button_get_value(p4_x_spin);
+        p4_y = gtk_spin_button_get_value(p4_y_spin);
+
+        auto curve = Curve("test",
+                            Coordinate(p1_x, p1_y),
+                            Coordinate(p2_x, p2_y),
+                            Coordinate(p3_x, p3_y),
+                            Coordinate(p4_x, p4_y));
+
+        _display_file.push_back(curve);
+    }
+
     void create_object_button(GtkButton* button, GtkEntry* obj_name)
     {
         auto name = gtk_entry_get_text(obj_name);
@@ -241,6 +286,13 @@ extern "C" {
             print("Object not selected. Select one to apply the transform!\n");
         }
 
+    }
+
+    void curve_dialog()
+    {
+        auto curve_dialog = (GtkDialog*)gtk_builder_get_object(
+            GTK_BUILDER(builder), "curve_dialog");
+        gtk_dialog_run(GTK_DIALOG(curve_dialog));
     }
 
     void apply_transformation(GtkButton* btn, GtkWidget* widget)

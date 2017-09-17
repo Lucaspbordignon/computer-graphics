@@ -8,7 +8,8 @@ enum OBJECT_TYPE
 {
     LINE,
     POLYGON,
-    POINT
+    POINT,
+    CURVE
 };
 
 enum COORDINATE_TYPE
@@ -94,6 +95,21 @@ class Point: public Object
         Point(std::string name, OBJECT_TYPE type):
             Object(name, type) {}
         ~Point() {}
+};
+
+class Curve: public Object
+{
+    public:
+        Curve(std::string name, OBJECT_TYPE type):
+            Object(name, type) {}
+        ~Curve() {}
+        Curve(std::string name, Coordinate p1, Coordinate p2, Coordinate p3, Coordinate p4):
+            Object(name, CURVE),
+            _p1(p1), _p2(p2), _p3(p3), _p4(p4) {}
+        Coordinate get_point(float t);
+    private:
+        Coordinate _p1, _p2, _p3, _p4;
+        float bezier(float t, float p1n, float p2n, float p3n, float p4n);
 };
 
 #endif // OBJECTS_HPP
