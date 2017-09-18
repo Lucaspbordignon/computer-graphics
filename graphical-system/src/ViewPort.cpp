@@ -131,12 +131,11 @@ void ViewPort::draw_point(Object* object, cairo_t* cr)
  */
 void ViewPort::draw_curve(Object* object, cairo_t* cr)
 {
-    Coordinate first_point = object->get_point(0);
-    Coordinate first_coord = viewport_transform(first_point);
+    auto coordinates = object->window_coordinate();
+    Coordinate first_coord = viewport_transform(coordinates[0]);
     cairo_move_to(cr, first_coord.x(), first_coord.y());
-    for (auto t = 0.1; t <= 1; t += 0.1) {
-        Coordinate actual_point = object->get_point(t);
-        Coordinate next_coord = viewport_transform(actual_point);
+    for (auto i = 0u; i < coordinates.size(); ++i) {
+        Coordinate next_coord = viewport_transform(coordinates[i]);
         cairo_line_to(cr, next_coord.x(), next_coord.y());
     }
     cairo_stroke(cr);

@@ -33,6 +33,13 @@ void Clipper::apply_clipping(Frame wind, DisplayFile& original_df, DisplayFile& 
                 clipped.push_back(clip_2d_polygon(*pol));
                 break;
             }
+            case CURVE:
+            {
+                Object* obj = &(*i);
+                Curve* cur = (Curve*) obj;
+                clipped.push_back(clip_2d_curve(*cur));
+                break;
+            }
         }
 }
 
@@ -71,6 +78,10 @@ Polygon Clipper::clip_2d_polygon(Polygon polygon)
     return sutherland_hodgman(polygon);
 }
 
+Curve Clipper::clip_2d_curve(Curve curve)
+{
+    return sutherland_hodgman(curve);
+}
 
 /**
  * Applies the Cohen-Sutherland algorithm for line clipping.
@@ -216,9 +227,9 @@ REGION_CODE Clipper::get_region_code(Coordinate coord)
 }
 
 
-Polygon Clipper::sutherland_hodgman(Polygon polygon)
+Object* Clipper::sutherland_hodgman(Object object)
 {
-    std::vector<Coordinate> output = polygon.world_coordinate();
+    std::vector<Coordinate> output = object.world_coordinate();
     auto edges = _window.edges();
     for (auto edge : edges) {
         if (output.empty()) {
@@ -249,7 +260,15 @@ Polygon Clipper::sutherland_hodgman(Polygon polygon)
             p1 = p2;
         }
     }
-    Polygon clipped = Polygon(polygon.name(), POLYGON);
+
+    auto clipped;
+
+    if (object.type() == POLYGON) {
+        clipped = Polygon(object.name(), POLYGON);
+    } else {
+        clipped = Curve(object.name(), CURVE);
+    }
+
     if (!output.empty()) {
         clipped.add_coordinates(output, WORLD);
     }

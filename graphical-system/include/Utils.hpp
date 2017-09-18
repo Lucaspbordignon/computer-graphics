@@ -199,7 +199,7 @@ extern "C" {
                             Coordinate(p1_x, p1_y),
                             Coordinate(p2_x, p2_y),
                             Coordinate(p3_x, p3_y),
-                            Coordinate(p4_x, p4_y));
+                            Coordinate(p4_x, p4_y), 0.01);
 
         _display_file.push_back(curve);
         gtk_widget_hide(widget);

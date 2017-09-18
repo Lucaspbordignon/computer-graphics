@@ -105,9 +105,19 @@ class Curve: public Object
         Curve(std::string name, OBJECT_TYPE type):
             Object(name, type) {}
         ~Curve() {}
-        Curve(std::string name, Coordinate p1, Coordinate p2, Coordinate p3, Coordinate p4):
+        Curve(std::string name, Coordinate p1, Coordinate p2, 
+            Coordinate p3, Coordinate p4, float rate):
             Object(name, CURVE),
-            _p1(p1), _p2(p2), _p3(p3), _p4(p4) {}
+            _p1(p1), _p2(p2), _p3(p3), _p4(p4) {
+                if (rate <= 0 || rate >= 1) {
+                    rate = 0.1;
+                }
+
+                float t;
+                for (t = 0; t <= 1; t = t + rate) {
+                    add_coordinates(get_point(t), WORLD);
+                }
+            }
         Coordinate get_point(float t);
     private:
         Coordinate _p1, _p2, _p3, _p4;
