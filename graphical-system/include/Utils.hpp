@@ -202,6 +202,7 @@ extern "C" {
                             Coordinate(p4_x, p4_y));
 
         _display_file.push_back(curve);
+        gtk_widget_hide(widget);
     }
 
     void create_object_button(GtkButton* button, GtkEntry* obj_name)
