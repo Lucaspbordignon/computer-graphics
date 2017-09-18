@@ -35,6 +35,7 @@ enum ZOOM_TYPE
 class Coordinate
 {
     public:
+        Coordinate() {};
         Coordinate(float x, float y):
             _x(x),
             _y(y) {}
@@ -58,8 +59,9 @@ class Object
         virtual void add_coordinates(float x, float y, COORDINATE_TYPE type);
         virtual void add_coordinates(Coordinate coord, COORDINATE_TYPE type);
         virtual void add_coordinates(std::vector<Coordinate>, COORDINATE_TYPE type);
-        void update_coordinate(Coordinate coord, int pos);
+        virtual Coordinate get_point(float t) {};
         Coordinate center_point();
+        void update_coordinate(Coordinate coord, int pos);
         OBJECT_TYPE type() {return _type;}
         std::string name() {return _name;}
         std::vector<Coordinate> world_coordinate() {return _world_coordinates;}
