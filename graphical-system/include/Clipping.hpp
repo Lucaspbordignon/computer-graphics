@@ -37,7 +37,7 @@ class Clipper
         Frame _window;
         Line cohen_sutherland(Line line);
         Line liang_barsky(Line line);
-        Object sutherland_hodgman(Object object);
+        Object sutherland_hodgman(Object* object);
         REGION_CODE get_region_code(Coordinate coord);
         bool is_inside(Coordinate coord, Edge edge);
 };

@@ -112,7 +112,6 @@ class Curve: public Object
         Coordinate get_point(float t);
 
     private:
-        std::vector<Coordinate> _world_coordinates;
         float bezier(float t, float p1n, float p2n, float p3n, float p4n);
 };
 

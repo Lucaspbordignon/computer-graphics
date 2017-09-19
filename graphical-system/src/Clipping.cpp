@@ -36,7 +36,9 @@ void Clipper::apply_clipping(Frame wind, DisplayFile& original_df, DisplayFile& 
             case CURVE:
             {
                 // TEST
-                clipped.push_back(*i);
+                Object* obj = &(*i);
+                Curve* curve = (Curve*) obj;
+                clipped.push_back(clip_2d_curve(*curve));
                 break;
             }
         }
@@ -74,12 +76,19 @@ Line Clipper::clip_2d_line(Line line, LINE_CLIPPING_METHOD method)
  */
 Polygon Clipper::clip_2d_polygon(Polygon polygon)
 {
-    return sutherland_hodgman(polygon);
+    Object clipped = sutherland_hodgman(&polygon);
+    Polygon* poly_clipped = (Polygon*) &clipped;
+    return *poly_clipped;
 }
 
+/*
+ * Calls the polygon clipping algorithm (Sutherland-Hodgman) to clip a curve.
+ */
 Curve Clipper::clip_2d_curve(Curve curve)
 {
-    return sutherland_hodgman(curve);
+    Object clipped = sutherland_hodgman(&curve);
+    Curve* curve_clipped = (Curve*) &clipped;
+    return *curve_clipped;
 }
 
 /**
@@ -226,9 +235,9 @@ REGION_CODE Clipper::get_region_code(Coordinate coord)
 }
 
 
-Object* Clipper::sutherland_hodgman(Object object)
+Object Clipper::sutherland_hodgman(Object* object)
 {
-    std::vector<Coordinate> output = object.world_coordinate();
+    std::vector<Coordinate> output = object->world_coordinate();
     auto edges = _window.edges();
     for (auto edge : edges) {
         if (output.empty()) {
@@ -260,17 +269,18 @@ Object* Clipper::sutherland_hodgman(Object object)
         }
     }
 
-    auto clipped;
+    Object clipped;
 
-    if (object.type() == POLYGON) {
-        clipped = Polygon(object.name(), POLYGON);
+    if (object->type() == POLYGON) {
+        clipped = Polygon(object->name(), POLYGON);
     } else {
-        clipped = Curve(object.name(), CURVE);
+        clipped = Curve(object->name(), CURVE);
     }
 
     if (!output.empty()) {
         clipped.add_coordinates(output, WORLD);
     }
+
     return clipped;
 }
 
