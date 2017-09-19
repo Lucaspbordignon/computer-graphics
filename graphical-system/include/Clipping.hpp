@@ -31,12 +31,13 @@ class Clipper
         Point clip_2d_point(Point point);
         Line clip_2d_line(Line line, LINE_CLIPPING_METHOD method = COHEN_SUTHERLAND);
         Polygon clip_2d_polygon(Polygon polygon);
+        Curve clip_2d_curve(Curve curve);
 
     private:
         Frame _window;
         Line cohen_sutherland(Line line);
         Line liang_barsky(Line line);
-        Polygon sutherland_hodgman(Polygon polygon);
+        Object sutherland_hodgman(Object object);
         REGION_CODE get_region_code(Coordinate coord);
         bool is_inside(Coordinate coord, Edge edge);
 };

@@ -132,8 +132,8 @@ void ViewPort::draw_point(Object* object, cairo_t* cr)
  */
 void ViewPort::draw_curve(Curve* object, cairo_t* cr)
 {
-    Coordinate first_point = object->get_point(0);
-    Coordinate first_coord = viewport_transform(first_point);
+    auto coordinates = object->window_coordinate();
+    Coordinate first_coord = viewport_transform(coordinates[0]);
     cairo_move_to(cr, first_coord.x(), first_coord.y());
     for (auto t = 0.1; t <= 1; t += 1e-3) {
         Coordinate actual_point = object->get_point(t);
