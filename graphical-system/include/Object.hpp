@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <math.h>
 
 enum OBJECT_TYPE
 {
@@ -59,7 +60,6 @@ class Object
         virtual void add_coordinates(float x, float y, COORDINATE_TYPE type);
         virtual void add_coordinates(Coordinate coord, COORDINATE_TYPE type);
         virtual void add_coordinates(std::vector<Coordinate>, COORDINATE_TYPE type);
-        virtual Coordinate get_point(float t) {};
         Coordinate center_point();
         void update_coordinate(Coordinate coord, int pos);
         OBJECT_TYPE type() {return _type;}
@@ -106,11 +106,13 @@ class Curve: public Object
             Object(name, type) {}
         ~Curve() {}
         Curve(std::string name, Coordinate p1, Coordinate p2, Coordinate p3, Coordinate p4):
-            Object(name, CURVE),
-            _p1(p1), _p2(p2), _p3(p3), _p4(p4) {}
+            Object(name, CURVE) {
+                add_coordinates({p1, p2, p3, p4}, WORLD);
+            }
         Coordinate get_point(float t);
+
     private:
-        Coordinate _p1, _p2, _p3, _p4;
+        std::vector<Coordinate> _world_coordinates;
         float bezier(float t, float p1n, float p2n, float p3n, float p4n);
 };
 

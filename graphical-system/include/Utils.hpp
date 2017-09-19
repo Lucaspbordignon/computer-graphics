@@ -159,50 +159,24 @@ extern "C" {
         gtk_list_store_set(_name_list, &it, 0, aux, 1, "POINT", -1);
     }
 
-    void add_curve(GtkButton* btn, GtkWidget* widget) {
-        auto p1_x_spin = (GtkSpinButton*)gtk_builder_get_object(
-                                        GTK_BUILDER(builder),
-                                        "bezier_p1_x_coord");
-        auto p1_y_spin = (GtkSpinButton*)gtk_builder_get_object(
-                                        GTK_BUILDER(builder),
-                                        "bezier_p1_y_coord");
-        auto p2_x_spin = (GtkSpinButton*)gtk_builder_get_object(
-                                        GTK_BUILDER(builder),
-                                        "bezier_p2_x_coord");
-        auto p2_y_spin = (GtkSpinButton*)gtk_builder_get_object(
-                                        GTK_BUILDER(builder),
-                                        "bezier_p2_y_coord");
-        auto p3_x_spin = (GtkSpinButton*)gtk_builder_get_object(
-                                        GTK_BUILDER(builder),
-                                        "bezier_p3_x_coord");
-        auto p3_y_spin = (GtkSpinButton*)gtk_builder_get_object(
-                                        GTK_BUILDER(builder),
-                                        "bezier_p3_y_coord");
-        auto p4_x_spin = (GtkSpinButton*)gtk_builder_get_object(
-                                        GTK_BUILDER(builder),
-                                        "bezier_p4_x_coord");
-        auto p4_y_spin = (GtkSpinButton*)gtk_builder_get_object(
-                                        GTK_BUILDER(builder),
-                                        "bezier_p4_y_coord");
-
-        float p1_x, p1_y, p2_x, p2_y, p3_x, p3_y, p4_x, p4_y;
-        p1_x = gtk_spin_button_get_value(p1_x_spin);
-        p1_y = gtk_spin_button_get_value(p1_y_spin);
-        p2_x = gtk_spin_button_get_value(p2_x_spin);
-        p2_y = gtk_spin_button_get_value(p2_y_spin);
-        p3_x = gtk_spin_button_get_value(p3_x_spin);
-        p3_y = gtk_spin_button_get_value(p3_y_spin);
-        p4_x = gtk_spin_button_get_value(p4_x_spin);
-        p4_y = gtk_spin_button_get_value(p4_y_spin);
-
-        auto curve = Curve("test",
-                            Coordinate(p1_x, p1_y),
-                            Coordinate(p2_x, p2_y),
-                            Coordinate(p3_x, p3_y),
-                            Coordinate(p4_x, p4_y));
-
+    void add_bezier(std::string name)
+    {
+        /* Inserts a Bezier curve to the display file */
+        if (_coordinates_storage.size() < 4)
+            return print("Curve not created! Less than 4 points given!");
+        
+        auto curve = Curve(name, _coordinates_storage[0],
+                                 _coordinates_storage[1],
+                                 _coordinates_storage[2],
+                                 _coordinates_storage[3]);
         _display_file.push_back(curve);
-        gtk_widget_hide(widget);
+
+        /* Add the element to the list store */
+        char aux[1024];
+        strcpy(aux, name.c_str());
+        GtkTreeIter it;
+        gtk_list_store_append(_name_list, &it);
+        gtk_list_store_set(_name_list, &it, 0, aux, 1, "BEZIER", -1);
     }
 
     void create_object_button(GtkButton* button, GtkEntry* obj_name)
@@ -233,7 +207,7 @@ extern "C" {
                     add_polygon(name);
                     break;
                 } else if(!strncmp(selected, "Bezier Curve", 12)) {
-                    // TODO
+                    add_bezier(name);
                     break;
                 } else if(!strncmp(selected, "B-Spline Curve", 14)) {
                     // TODO
@@ -245,7 +219,7 @@ extern "C" {
         gtk_widget_queue_draw(_draw_area);
         _coordinates_storage.clear();
         gtk_list_store_clear(_coord_list);
-        print("Object with created and added to display file.\n");
+        print("Object created and added to display file.\n");
     }
 
     void zoom_in()
@@ -298,7 +272,6 @@ extern "C" {
         } else {
             print("Object not selected. Select one to apply the transform!\n");
         }
-
     }
 
     void curve_dialog()
@@ -321,7 +294,7 @@ extern "C" {
             gchar *name;
             gtk_tree_model_get(model, &it, 0, &name, -1);
 
-            // Get the object to be called
+            /* Get the object to be called */
             obj = _display_file.get_object(name);
         }
 

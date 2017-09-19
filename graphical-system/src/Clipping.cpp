@@ -33,6 +33,12 @@ void Clipper::apply_clipping(Frame wind, DisplayFile& original_df, DisplayFile& 
                 clipped.push_back(clip_2d_polygon(*pol));
                 break;
             }
+            case CURVE:
+            {
+                // TEST
+                clipped.push_back(*i);
+                break;
+            }
         }
 }
 

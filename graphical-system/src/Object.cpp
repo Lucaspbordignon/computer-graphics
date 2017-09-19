@@ -1,5 +1,4 @@
 #include "Object.hpp"
-#include <math.h>
 
 void Object::add_coordinates(float x, float y, COORDINATE_TYPE type)
 {
@@ -56,8 +55,8 @@ float Curve::bezier(float t, float p1n, float p2n, float p3n, float p4n)
 
 Coordinate Curve::get_point(float t)
 {
-    return Coordinate(
-        bezier(t, _p1.x(), _p2.x(), _p3.x(), _p4.x()),
-        bezier(t, _p1.y(), _p2.y(), _p3.y(), _p4.y())
-    );
+    auto p = window_coordinate();
+    auto x = bezier(t, p[0].x(), p[1].x(), p[2].x(), p[3].x());
+    auto y = bezier(t, p[0].y(), p[1].y(), p[2].y(), p[3].y());
+    return Coordinate(x, y);
 }
