@@ -60,3 +60,19 @@ Coordinate Curve::get_point(float t)
     auto y = bezier(t, p[0].y(), p[1].y(), p[2].y(), p[3].y());
     return Coordinate(x, y);
 }
+
+std::vector<Line> Curve::get_segments()
+{
+    if (_segments.empty()) {
+        for (auto t = 0.1; t < 1; t += 0.1) {
+            Coordinate p1 = get_point(t);
+            Coordinate p2 = get_point(t+0.1);
+
+            Line line = Line("Curve segment", LINE);
+            line.add_coordinates({p1, p2}, WORLD);
+            _segments.push_back(line);
+        }
+    }
+
+    return _segments;
+}

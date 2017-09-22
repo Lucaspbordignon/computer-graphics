@@ -110,9 +110,12 @@ class Curve: public Object
                 add_coordinates({p1, p2, p3, p4}, WORLD);
             }
         Coordinate get_point(float t);
+        std::vector<Line> get_segments();
+        void set_segments(std::vector<Line> segments) { _segments = segments; }
 
     private:
         float bezier(float t, float p1n, float p2n, float p3n, float p4n);
+        std::vector<Line> _segments;
 };
 
 #endif // OBJECTS_HPP
