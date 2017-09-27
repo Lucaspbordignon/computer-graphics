@@ -105,20 +105,45 @@ class Curve: public Object
         Curve(std::string name, OBJECT_TYPE type):
             Object(name, type),
             _step(1e-3) {}
-        ~Curve() {}
-        Curve(std::string name, Coordinate p1, Coordinate p2, Coordinate p3, Coordinate p4):
+        Curve(std::string name, std::vector<Coordinate> points):
             Object(name, CURVE),
             _step(1e-3) {
-                add_coordinates({p1, p2, p3, p4}, WORLD);
+                add_coordinates(points, WORLD);
             }
-        Coordinate get_point(float t);
-        std::vector<Line> get_segments();
-        void set_segments(std::vector<Line> segments) { _segments = segments; }
+        virtual ~Curve() {};
+        virtual Coordinate get_point(float t) {};
+        std::vector<Line*> get_segments();
+        void set_segments(std::vector<Line*> segments);
 
     private:
-        float bezier(float t, float p1n, float p2n, float p3n, float p4n);
         float _step;
-        std::vector<Line> _segments;
+        std::vector<Line*> _segments;
+};
+
+class Bezier: public Curve
+{
+    public:
+        Bezier(std::string name):
+            Curve(name, CURVE) {}
+        Bezier(std::string name, std::vector<Coordinate> points):
+            Curve(name, points) {}
+        ~Bezier() {}
+        Coordinate get_point(float t);
+    private:
+        float bezier(float, float, float, float, float);
+};
+
+class Spline: public Curve
+{
+    public:
+        Spline(std::string name):
+            Curve(name, CURVE) {}
+        Spline(std::string name, std::vector<Coordinate> points):
+            Curve(name, points) {}
+        ~Spline() {}
+        Coordinate get_point(float t);
+    private:
+        float spline(float, float, float, float, float);
 };
 
 #endif // OBJECTS_HPP

@@ -39,21 +39,21 @@ void ViewPort::draw_all_objects(cairo_t* cr, const DisplayFile& display_file)
  * Draw a given object, applying the right method based on the type of
  * the object.
  */
-void ViewPort::draw_object(Object object, cairo_t* cr)
+void ViewPort::draw_object(Object* object, cairo_t* cr)
 {
-    switch(object.type())
+    switch(object->type())
     {
         case LINE:
-            draw_line(&object, cr);
+            draw_line(object, cr);
             break;
         case POLYGON:
-            draw_polygon(&object, cr);
+            draw_polygon(object, cr);
             break;
         case POINT:
-            draw_point(&object, cr);
+            draw_point(object, cr);
             break;
         case CURVE:
-            draw_curve((Curve*)&object, cr);
+            draw_curve((Curve*)object, cr);
             break;
     }
 }
@@ -132,8 +132,8 @@ void ViewPort::draw_point(Object* object, cairo_t* cr)
  */
 void ViewPort::draw_curve(Curve* object, cairo_t* cr)
 {
-    for (Line line : object->get_segments()) {
-        draw_line(&line, cr);
+    for (Line* line : object->get_segments()) {
+        draw_line(line, cr);
     }
 }
 

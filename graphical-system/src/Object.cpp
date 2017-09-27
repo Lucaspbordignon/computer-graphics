@@ -42,7 +42,40 @@ Coordinate Object::center_point()
     return Coordinate((sum_x / n), (sum_y / n));
 }
 
-float Curve::bezier(float t, float p1n, float p2n, float p3n, float p4n)
+/**
+ * Given a curve, returns a vector with all the small segmentes needed to draw
+ * it on the viewport.
+ */
+std::vector<Line*> Curve::get_segments()
+{
+    if (_segments.empty()) {
+        for (auto t = 1e-3; t < 1; t += _step) {
+            Coordinate p1 = get_point(t);
+            Coordinate p2 = get_point(t + _step);
+
+            auto line = new Line("Curve segment", LINE);
+            line->add_coordinates({p1, p2}, WORLD);
+            _segments.push_back(line);
+        }
+    }
+
+    return _segments;
+}
+
+void Curve::set_segments(std::vector<Line*> segments)
+{
+    _segments = segments;
+}
+
+Coordinate Bezier::get_point(float t)
+{
+    auto p = world_coordinate();
+    auto x = bezier(t, p[0].x(), p[1].x(), p[2].x(), p[3].x());
+    auto y = bezier(t, p[0].y(), p[1].y(), p[2].y(), p[3].y());
+    return Coordinate(x, y);
+}
+
+float Bezier::bezier(float t, float p1n, float p2n, float p3n, float p4n)
 {
     float t3 = pow(t, 3);
     float t2 = pow(t, 2);
@@ -53,30 +86,22 @@ float Curve::bezier(float t, float p1n, float p2n, float p3n, float p4n)
            (p4n * t3);
 }
 
-Coordinate Curve::get_point(float t)
+Coordinate Spline::get_point(float t)
 {
-    // ISSUE: Coordinates are normalized only after a call to the clipping
-    //          method.
-
-    auto p = window_coordinate();
-    auto x = bezier(t, p[0].x(), p[1].x(), p[2].x(), p[3].x());
-    auto y = bezier(t, p[0].y(), p[1].y(), p[2].y(), p[3].y());
+    auto p = world_coordinate();
+    auto x = spline(t, p[0].x(), p[1].x(), p[2].x(), p[3].x());
+    auto y = spline(t, p[0].y(), p[1].y(), p[2].y(), p[3].y());
     return Coordinate(x, y);
 }
 
-std::vector<Line> Curve::get_segments()
+float Spline::spline(float t, float p1n, float p2n, float p3n, float p4n)
 {
-    std::vector<Line> segments;
-    if (_segments.empty()) {
-        for (auto t = 0.1; t < 1; t += _step) {
-            Coordinate p1 = get_point(t);
-            Coordinate p2 = get_point(t + _step);
-
-            Line line = Line("Curve segment", LINE);
-            line.add_coordinates({p1, p2}, WORLD);
-            segments.push_back(line);
-        }
-    }
-
-    return segments;
+    /* TODO */
+    float t3 = pow(t, 3);
+    float t2 = pow(t, 2);
+    
+    return (p1n * (-1 * t3 + 3 * t2 - 3 * t + 1)) + 
+           (p2n * (3 * t3 - 6 * t2 + 3 * t)) +
+           (p3n * (-3 * t3 + 3 * t)) +
+           (p4n * (t3 + 4 * t2 + t));
 }

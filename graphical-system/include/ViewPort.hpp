@@ -17,7 +17,7 @@ class ViewPort
         Frame window();
         Frame* window_ptr();
         void draw_all_objects(cairo_t* cr, const DisplayFile&);
-        void draw_object(Object object, cairo_t* cr);
+        void draw_object(Object* object, cairo_t* cr);
         void draw_window_border(cairo_t*);
         void zoom(ZOOM_TYPE, float);
         void move(DIRECTION direction, float step_size);

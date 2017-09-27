@@ -92,16 +92,16 @@ void rotate_2d_object(Object* obj, float angle, float x, float y)
  * Given an object and a matrix of normalization, applies it to the object
  * and save the normalized coordinates inside of it.
  */
-void normalize(Object& obj, Matrix norm_mat)
+void normalize(Object* obj, Matrix norm_mat)
 {
     auto norm_coord = std::vector<Coordinate>();
-    auto wrld_coord = obj.world_coordinate();
+    auto wrld_coord = obj->world_coordinate();
 
     for (auto& i : wrld_coord) {
       Matrix result = dot_product(Matrix({{i.x(), i.y(), 1}}), norm_mat);
       norm_coord.push_back(Coordinate(result[0][0], result[0][1]));
     }
-    obj.add_coordinates(norm_coord, WINDOW);
+    obj->add_coordinates(norm_coord, WINDOW);
 }
 
 /**
@@ -121,8 +121,15 @@ void normalize_coordinates(Frame window, DisplayFile& objects)
                                          mat_rotate(-ang_in_rad));
     normalization_mat = dot_product(normalization_mat, m_scale); 
 
-    for(auto obj = objects.begin(); obj != objects.end(); ++obj)
-        normalize(*obj, normalization_mat);
+    for(auto obj : objects) {
+        /* Special case of curves */
+        if (obj->type() == CURVE) {
+            for(auto segment : ((Curve*)obj)->get_segments())
+                normalize(segment, normalization_mat);
+        } else {
+            normalize(obj, normalization_mat);
+        }
+    }
 }
 
 #endif // TRANSFORMATION_HPP

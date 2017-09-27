@@ -11,33 +11,33 @@ void Clipper::apply_clipping(Frame wind, DisplayFile& original_df, DisplayFile& 
     clipped.clear();
 
     for(auto i = original_df.begin(); i != original_df.end(); ++i)
-        switch((*i).type()) {
+        switch((*i)->type()) {
             case POINT:
             {
-                Object* obj = &(*i);
+                Object* obj = (*i);
                 Point* point = (Point*) obj;
-                clipped.push_back(clip_2d_point(*point));
+                clipped.push_back(clip_2d_point(point));
                 break;
             }
             case LINE:
             {
-                Object* obj = &(*i);
+                Object* obj = (*i);
                 Line* line = (Line*) obj;
-                clipped.push_back(clip_2d_line(*line));
+                clipped.push_back(clip_2d_line(line));
                 break;
             }
             case POLYGON:
             {
-                Object* obj = &(*i);
+                Object* obj = (*i);
                 Polygon* pol = (Polygon*) obj;
-                clipped.push_back(clip_2d_polygon(*pol));
+                clipped.push_back(clip_2d_polygon(pol));
                 break;
             }
             case CURVE:
             {
-                Object* obj = &(*i);
+                Object* obj = (*i);
                 Curve* curve = (Curve*) obj;
-                clipped.push_back(clip_2d_curve(*curve));
+                clipped.push_back(clip_2d_curve(curve));
                 break;
             }
         }
@@ -46,21 +46,21 @@ void Clipper::apply_clipping(Frame wind, DisplayFile& original_df, DisplayFile& 
 /**
  * Applies the trivial algorithm of point clipping.
  */
-Point Clipper::clip_2d_point(Point point)
+Point* Clipper::clip_2d_point(Point* point)
 {
-   auto coord = point.world_coordinate()[0];
+   auto coord = point->world_coordinate()[0];
 
    if(coord.x() >= _window.get_x_min() && coord.x() <= _window.get_x_max())
        if(coord.y() >= _window.get_y_min() && coord.y() <= _window.get_y_max())
            return point;
 
-   return Point(point.name(), POINT);
+   return (new Point(point->name(), POINT));
 }
 
 /**
  * Applies the line clipping algorithm, using a specific algorithm.
  */
-Line Clipper::clip_2d_line(Line line, LINE_CLIPPING_METHOD method)
+Line* Clipper::clip_2d_line(Line* line, LINE_CLIPPING_METHOD method)
 {
     switch(method) {
         case COHEN_SUTHERLAND:
@@ -73,51 +73,54 @@ Line Clipper::clip_2d_line(Line line, LINE_CLIPPING_METHOD method)
 /**
  * Calls the Sutherland-Hodgman polygon clipping algorithm
  */
-Polygon Clipper::clip_2d_polygon(Polygon polygon)
+Polygon* Clipper::clip_2d_polygon(Polygon* polygon)
 {
-    Polygon clipped = sutherland_hodgman(polygon);
-    return clipped;
+    return sutherland_hodgman(polygon);
 }
 
 /*
  * Calls the polygon clipping algorithm (Sutherland-Hodgman) to clip a curve.
  */
-Curve Clipper::clip_2d_curve(Curve curve)
+Curve* Clipper::clip_2d_curve(Curve* curve)
 {
-    std::vector<Line> clipped;
-    for (Line segment : curve.get_segments()) {
-        Line clipped_segment = clip_2d_line(segment);
-        clipped.push_back(clipped_segment);
+    std::vector<Line*> clipped;
+    for (Line* segment : curve->get_segments()) {
+        //
+        // TODO: Fix this! Clipping not working properly, just printing actually
+        //
+        //auto clipped_segment = clip_2d_line(segment);
+        //clipped.push_back(clipped_segment);
+        clipped.push_back(segment);
     }
 
-    curve.get_segments().clear();
-    curve.set_segments(clipped);
+    curve->get_segments().clear();
+    curve->set_segments(clipped);
     return curve;
 }
 
 /**
  * Applies the Cohen-Sutherland algorithm for line clipping.
  */
-Line Clipper::cohen_sutherland(Line line)
+Line* Clipper::cohen_sutherland(Line* line)
 {
-    Line clipped = Line(line.name(), LINE);
-    clipped.add_coordinates(line.world_coordinate()[0], WORLD);
-    clipped.add_coordinates(line.world_coordinate()[1], WORLD);
+    Line* clipped = new Line(line->name(), LINE);
+    clipped->add_coordinates(line->world_coordinate()[0], WORLD);
+    clipped->add_coordinates(line->world_coordinate()[1], WORLD);
 
-    auto x1 = clipped.world_coordinate()[0].x();
-    auto y1 = clipped.world_coordinate()[0].y();
-    auto x2 = clipped.world_coordinate()[1].x();
-    auto y2 = clipped.world_coordinate()[1].y();
+    auto x1 = clipped->world_coordinate()[0].x();
+    auto y1 = clipped->world_coordinate()[0].y();
+    auto x2 = clipped->world_coordinate()[1].x();
+    auto y2 = clipped->world_coordinate()[1].y();
 
     float m = (y2 - y1)/(x2 - x1);
     float x, y;
 
     while(true) {
-        auto region_p1 = get_region_code(clipped.world_coordinate()[0]);
-        auto region_p2 = get_region_code(clipped.world_coordinate()[1]);
+        auto region_p1 = get_region_code(clipped->world_coordinate()[0]);
+        auto region_p2 = get_region_code(clipped->world_coordinate()[1]);
 
         if ((region_p1 & region_p2) != 0) {
-            return Line(line.name(), LINE);
+            return new Line(line->name(), LINE);
         } else if (region_p1 == 0 && region_p2 == 0) {
             return clipped;
         } else {
@@ -145,9 +148,9 @@ Line Clipper::cohen_sutherland(Line line)
             Coordinate coord = Coordinate(x, y);
 
             if (out == region_p1) {
-                clipped.update_coordinate(coord, 0);
+                clipped->update_coordinate(coord, 0);
             } else {
-                clipped.update_coordinate(coord, 1);
+                clipped->update_coordinate(coord, 1);
             }
         }
     }
@@ -158,11 +161,11 @@ Line Clipper::cohen_sutherland(Line line)
  * (Liang, Y. D. and Barsky, B., "A New Concept and Method for Line Clipping",
  *  January 1984.)
  */
-Line Clipper::liang_barsky(Line line)
+Line* Clipper::liang_barsky(Line* line)
 {
-    Line clipped = Line(line.name(), LINE);
-    auto coord_1 = line.world_coordinate()[0];
-    auto coord_2 = line.world_coordinate()[1];
+    auto clipped = new Line(line->name(), LINE);
+    auto coord_1 = line->world_coordinate()[0];
+    auto coord_2 = line->world_coordinate()[1];
     auto r_zeta_1 = std::vector<float>();
     auto r_zeta_2 = std::vector<float>();
     
@@ -212,10 +215,14 @@ Line Clipper::liang_barsky(Line line)
                     coord_1.x() + (zeta_2 * p[1]),
                     coord_1.y() + (zeta_2 * p[3]));
 
-    clipped.add_coordinates({coord_1, coord_2}, WORLD);
+    clipped->add_coordinates({coord_1, coord_2}, WORLD);
     return clipped;
 }
 
+/**
+ * Given a coordinate, returns it's region code based on the window; Used
+ * inside the cohen-sutherland algorithm.
+ */
 REGION_CODE Clipper::get_region_code(Coordinate coord)
 {
     auto x = coord.x();
@@ -238,10 +245,12 @@ REGION_CODE Clipper::get_region_code(Coordinate coord)
     return code;
 }
 
-
-Polygon Clipper::sutherland_hodgman(Polygon polygon)
+/**
+ * Sutherland-hodgman algorithm for polygon clipping.
+ */
+Polygon* Clipper::sutherland_hodgman(Polygon* polygon)
 {
-    std::vector<Coordinate> output = polygon.world_coordinate();
+    std::vector<Coordinate> output = polygon->world_coordinate();
     auto edges = _window.edges();
     for (auto edge : edges) {
         if (output.empty()) {
@@ -257,26 +266,26 @@ Polygon Clipper::sutherland_hodgman(Polygon polygon)
             if (&p1 == &p2) {
                 continue;
             }
-            Line line = Line("Clipping_Line", LINE);
-            line.add_coordinates(p1, WORLD);
-            line.add_coordinates(p2, WORLD);
+            auto line = new Line("Clipping_Line", LINE);
+            line->add_coordinates(p1, WORLD);
+            line->add_coordinates(p2, WORLD);
 
             if (is_inside(p2, edge)) {
                 if (!is_inside(p1, edge)) {
-                    output.push_back(clip_2d_line(line).world_coordinate()[0]);
+                    output.push_back(clip_2d_line(line)->world_coordinate()[0]);
                 }
                 output.push_back(p2);
             } else if (is_inside(p1, edge)) {
-                output.push_back(clip_2d_line(line).world_coordinate()[1]);
+                output.push_back(clip_2d_line(line)->world_coordinate()[1]);
             }
             p1 = p2;
         }
     }
 
-    Polygon clipped = Polygon(polygon.name(), POLYGON);
+    Polygon* clipped = new Polygon(polygon->name(), POLYGON);
 
     if (!output.empty()) {
-        clipped.add_coordinates(output, WORLD);
+        clipped->add_coordinates(output, WORLD);
     }
 
     return clipped;
