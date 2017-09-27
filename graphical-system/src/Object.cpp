@@ -55,6 +55,9 @@ float Curve::bezier(float t, float p1n, float p2n, float p3n, float p4n)
 
 Coordinate Curve::get_point(float t)
 {
+    // ISSUE: Coordinates are normalized only after a call to the clipping
+    //          method.
+
     auto p = window_coordinate();
     auto x = bezier(t, p[0].x(), p[1].x(), p[2].x(), p[3].x());
     auto y = bezier(t, p[0].y(), p[1].y(), p[2].y(), p[3].y());
@@ -63,16 +66,17 @@ Coordinate Curve::get_point(float t)
 
 std::vector<Line> Curve::get_segments()
 {
+    std::vector<Line> segments;
     if (_segments.empty()) {
-        for (auto t = 0.1; t < 1; t += 0.1) {
+        for (auto t = 0.1; t < 1; t += _step) {
             Coordinate p1 = get_point(t);
-            Coordinate p2 = get_point(t+0.1);
+            Coordinate p2 = get_point(t + _step);
 
             Line line = Line("Curve segment", LINE);
             line.add_coordinates({p1, p2}, WORLD);
-            _segments.push_back(line);
+            segments.push_back(line);
         }
     }
 
-    return _segments;
+    return segments;
 }

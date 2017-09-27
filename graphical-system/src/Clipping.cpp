@@ -35,7 +35,6 @@ void Clipper::apply_clipping(Frame wind, DisplayFile& original_df, DisplayFile& 
             }
             case CURVE:
             {
-                // TEST
                 Object* obj = &(*i);
                 Curve* curve = (Curve*) obj;
                 clipped.push_back(clip_2d_curve(*curve));
@@ -90,8 +89,10 @@ Curve Clipper::clip_2d_curve(Curve curve)
         Line clipped_segment = clip_2d_line(segment);
         clipped.push_back(clipped_segment);
     }
+
     curve.get_segments().clear();
     curve.set_segments(clipped);
+    return curve;
 }
 
 /**

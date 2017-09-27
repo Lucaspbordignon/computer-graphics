@@ -179,6 +179,26 @@ extern "C" {
         gtk_list_store_set(_name_list, &it, 0, aux, 1, "BEZIER", -1);
     }
 
+    void add_spline(std::string name)
+    {
+        /* Inserts a B-Spline curve to the display file */
+        if (_coordinates_storage.size() < 4)
+            return print("Curve not created! Less than 4 points given!");
+        
+        auto curve = Curve(name, _coordinates_storage[0],
+                                 _coordinates_storage[1],
+                                 _coordinates_storage[2],
+                                 _coordinates_storage[3]);
+        _display_file.push_back(curve);
+        
+        /* Add the element to the list store */
+        char aux[1024];
+        strcpy(aux, name.c_str());
+        GtkTreeIter it;
+        gtk_list_store_append(_name_list, &it);
+        gtk_list_store_set(_name_list, &it, 0, aux, 1, "B-SPLINE", -1);
+    }
+
     void create_object_button(GtkButton* button, GtkEntry* obj_name)
     {
         auto name = gtk_entry_get_text(obj_name);

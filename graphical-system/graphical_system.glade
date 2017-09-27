@@ -165,8 +165,8 @@
               <object class="GtkLabel" id="control_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_top">5</property>
-                <property name="margin_bottom">5</property>
+                <property name="margin_top">1</property>
+                <property name="margin_bottom">1</property>
                 <property name="label" translatable="yes">&lt;b&gt;Control&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
               </object>
@@ -368,7 +368,7 @@
                   <object class="GtkLabel" id="object_label">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="margin_top">15</property>
+                    <property name="margin_top">5</property>
                     <property name="margin_bottom">5</property>
                     <property name="label" translatable="yes">&lt;b&gt;Objects&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
@@ -696,6 +696,64 @@
                     <property name="position">7</property>
                   </packing>
                 </child>
+                <child>
+                  <object class="GtkLabel" id="clip_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="margin_top">5</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Clipping&lt;/b&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">8</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox" id="clipping_box">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkRadioButton" id="cohen">
+                        <property name="label" translatable="yes">Cohen-Sutherland</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="active">True</property>
+                        <property name="draw_indicator">True</property>
+                        <property name="group">liang</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkRadioButton" id="liang">
+                        <property name="label" translatable="yes">Liang-Barsky</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="active">True</property>
+                        <property name="draw_indicator">True</property>
+                        <property name="group">cohen</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">9</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -707,7 +765,7 @@
               <object class="GtkLabel" id="window_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_top">10</property>
+                <property name="margin_top">5</property>
                 <property name="margin_bottom">2</property>
                 <property name="label" translatable="yes">&lt;b&gt;Window  Properties&lt;/b&gt;</property>
                 <property name="use_markup">True</property>

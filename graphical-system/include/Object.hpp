@@ -103,10 +103,12 @@ class Curve: public Object
 {
     public:
         Curve(std::string name, OBJECT_TYPE type):
-            Object(name, type) {}
+            Object(name, type),
+            _step(1e-3) {}
         ~Curve() {}
         Curve(std::string name, Coordinate p1, Coordinate p2, Coordinate p3, Coordinate p4):
-            Object(name, CURVE) {
+            Object(name, CURVE),
+            _step(1e-3) {
                 add_coordinates({p1, p2, p3, p4}, WORLD);
             }
         Coordinate get_point(float t);
@@ -115,6 +117,7 @@ class Curve: public Object
 
     private:
         float bezier(float t, float p1n, float p2n, float p3n, float p4n);
+        float _step;
         std::vector<Line> _segments;
 };
 
