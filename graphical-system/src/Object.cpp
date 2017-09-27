@@ -100,8 +100,8 @@ float Spline::spline(float t, float p1n, float p2n, float p3n, float p4n)
     float t3 = pow(t, 3);
     float t2 = pow(t, 2);
     
-    return (p1n * (-1 * t3 + 3 * t2 - 3 * t + 1)) + 
+    return ((p1n * (-1 * t3 + 3 * t2 - 3 * t + 1)) + 
            (p2n * (3 * t3 - 6 * t2 + 3 * t)) +
            (p3n * (-3 * t3 + 3 * t)) +
-           (p4n * (t3 + 4 * t2 + t));
+           (p4n * (t3 + 4 * t2 + t))) / 6;
 }
