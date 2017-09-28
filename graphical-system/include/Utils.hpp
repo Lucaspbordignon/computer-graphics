@@ -8,6 +8,7 @@
 #include "ViewPort.hpp"
 #include "Transform.hpp"
 #include "Clipping.hpp"
+#include <iostream>
 
 #define GUI_FILE "graphical_system.glade"
 
@@ -44,6 +45,7 @@ DisplayFile _display_file;
 DisplayFile _clipped_objects;
 std::vector<Coordinate> _coordinates_storage;
 Clipper _clipper;
+LINE_CLIPPING_METHOD clip_algorithm = COHEN_SUTHERLAND;
 
 
 /**
@@ -94,7 +96,7 @@ extern "C" {
         /* Redraw a cairo context */
         _viewport->draw_window_border(cr);
         _clipper.apply_clipping(_viewport->window(), 
-                                _display_file, _clipped_objects);
+                                _display_file, _clipped_objects, clip_algorithm);
         normalize_coordinates(_viewport->window(), _clipped_objects);
         _viewport->draw_all_objects(cr, _clipped_objects);
         return FALSE;
@@ -357,6 +359,18 @@ extern "C" {
         auto ang = gtk_spin_button_get_value(ang_button);
         _viewport->window_ptr()->rotate(ang);
         gtk_widget_queue_draw(_draw_area);
+    }
+
+    void set_liang()
+    {
+        /* Sets line clipping algorithm to Liang-Barsky */
+        clip_algorithm = LIANG_BARSKY;
+    }
+
+    void set_cohen()
+    {
+        /* Sets line clipping algorithm to Cohen-Sutherland */
+        clip_algorithm = COHEN_SUTHERLAND;
     }
 }
 

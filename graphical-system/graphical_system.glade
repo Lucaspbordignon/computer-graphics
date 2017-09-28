@@ -724,6 +724,7 @@
                         <property name="active">True</property>
                         <property name="draw_indicator">True</property>
                         <property name="group">liang</property>
+                        <signal name="pressed" handler="set_cohen" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">True</property>
@@ -740,6 +741,7 @@
                         <property name="active">True</property>
                         <property name="draw_indicator">True</property>
                         <property name="group">cohen</property>
+                        <signal name="pressed" handler="set_liang" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">True</property>

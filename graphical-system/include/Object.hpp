@@ -111,13 +111,15 @@ class Curve: public Object
                 add_coordinates(points, WORLD);
             }
         virtual ~Curve() {};
-        virtual Coordinate get_point(float t) {};
+        virtual Coordinate get_point(float t, int i) {};
         std::vector<Line*> get_segments();
         void set_segments(std::vector<Line*> segments);
-        std::vector<Line*> generate_segments();
+        virtual std::vector<Line*> generate_segments();
+
+    protected:
+        float _step;
 
     private:
-        float _step;
         std::vector<Line*> _segments;
 };
 
@@ -129,7 +131,7 @@ class Bezier: public Curve
         Bezier(std::string name, std::vector<Coordinate> points):
             Curve(name, points) {}
         ~Bezier() {}
-        Coordinate get_point(float t);
+        Coordinate get_point(float t, int i);
     private:
         float bezier(float, float, float, float, float);
 };
@@ -142,7 +144,7 @@ class Spline: public Curve
         Spline(std::string name, std::vector<Coordinate> points):
             Curve(name, points) {}
         ~Spline() {}
-        Coordinate get_point(float t);
+        Coordinate get_point(float t, int i = 0);
     private:
         float spline(float, float, float, float, float);
 };
