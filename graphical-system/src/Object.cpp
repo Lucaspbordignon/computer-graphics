@@ -48,16 +48,8 @@ Coordinate Object::center_point()
  */
 std::vector<Line*> Curve::get_segments()
 {
-    if (_segments.empty()) {
-        for (auto t = 1e-3; t < 1; t += _step) {
-            Coordinate p1 = get_point(t);
-            Coordinate p2 = get_point(t + _step);
-
-            auto line = new Line("Curve segment", LINE);
-            line->add_coordinates({p1, p2}, WORLD);
-            _segments.push_back(line);
-        }
-    }
+    if (_segments.empty())
+        _segments = generate_segments();
 
     return _segments;
 }
@@ -65,6 +57,24 @@ std::vector<Line*> Curve::get_segments()
 void Curve::set_segments(std::vector<Line*> segments)
 {
     _segments = segments;
+}
+
+/**
+ * Generates all the segments using blending functions (iterative method)
+ */
+std::vector<Line*> Curve::generate_segments()
+{
+    std::vector<Line*> segments;
+    for (auto t = 1e-3; t < 1; t += _step) {
+        Coordinate p1 = get_point(t);
+        Coordinate p2 = get_point(t + _step);
+
+        auto line = new Line("Curve segment", LINE);
+        line->add_coordinates({p1, p2}, WORLD);
+        segments.push_back(line);
+    }
+
+    return segments;
 }
 
 Coordinate Bezier::get_point(float t)

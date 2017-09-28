@@ -114,6 +114,7 @@ class Curve: public Object
         virtual Coordinate get_point(float t) {};
         std::vector<Line*> get_segments();
         void set_segments(std::vector<Line*> segments);
+        std::vector<Line*> generate_segments();
 
     private:
         float _step;

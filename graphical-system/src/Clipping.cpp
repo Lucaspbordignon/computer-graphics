@@ -84,16 +84,11 @@ Polygon* Clipper::clip_2d_polygon(Polygon* polygon)
 Curve* Clipper::clip_2d_curve(Curve* curve)
 {
     std::vector<Line*> clipped;
-    for (Line* segment : curve->get_segments()) {
-        //
-        // TODO: Fix this! Clipping not working properly, just printing actually
-        //
-        //auto clipped_segment = clip_2d_line(segment);
-        //clipped.push_back(clipped_segment);
-        clipped.push_back(segment);
+    for (Line* segment : curve->generate_segments()) {
+        auto clipped_segment = clip_2d_line(segment);
+        clipped.push_back(clipped_segment);
     }
 
-    curve->get_segments().clear();
     curve->set_segments(clipped);
     return curve;
 }
