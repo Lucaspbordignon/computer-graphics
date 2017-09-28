@@ -5,7 +5,8 @@
  * Applies the right clipping algorithm for all the elementos of a given
  * display file, returning a new one with the clipped objects.
  */
-void Clipper::apply_clipping(Frame wind, DisplayFile& original_df, DisplayFile& clipped)
+void Clipper::apply_clipping(Frame wind, DisplayFile& original_df, DisplayFile& clipped, 
+                                LINE_CLIPPING_METHOD line_method)
 {
     _window = wind;
     clipped.clear();
@@ -23,7 +24,7 @@ void Clipper::apply_clipping(Frame wind, DisplayFile& original_df, DisplayFile& 
             {
                 Object* obj = (*i);
                 Line* line = (Line*) obj;
-                clipped.push_back(clip_2d_line(line));
+                clipped.push_back(clip_2d_line(line, line_method));
                 break;
             }
             case POLYGON:
@@ -288,5 +289,6 @@ Polygon* Clipper::sutherland_hodgman(Polygon* polygon)
 
 bool Clipper::is_inside(Coordinate coord, Edge edge)
 {
-    return (edge.v2().x() - edge.v1().x()) * (coord.y() - edge.v1().y()) < (edge.v2().y() - edge.v1().y()) * (coord.x() - edge.v1().x());
+    return (edge.v2().x() - edge.v1().x()) * (coord.y() - edge.v1().y()) < 
+           (edge.v2().y() - edge.v1().y()) * (coord.x() - edge.v1().x());
 }

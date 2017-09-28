@@ -65,53 +65,68 @@ void Curve::set_segments(std::vector<Line*> segments)
 std::vector<Line*> Curve::generate_segments()
 {
     std::vector<Line*> segments;
-    for (auto t = 1e-3; t < 1; t += _step) {
-        Coordinate p1 = get_point(t);
-        Coordinate p2 = get_point(t + _step);
+    auto num_control_points = world_coordinate().size();
 
-        auto line = new Line("Curve segment", LINE);
-        line->add_coordinates({p1, p2}, WORLD);
-        segments.push_back(line);
+    for (auto index = 0; (index + 3) < num_control_points; ++index) {
+        for (auto t = 1e-3; t < 1; t += _step) {
+            Coordinate p1 = get_point(t, index);
+            Coordinate p2 = get_point(t + _step, index);
+
+            auto line = new Line("Curve segment", LINE);
+            line->add_coordinates({p1, p2}, WORLD);
+            segments.push_back(line);
+        }
     }
 
     return segments;
 }
 
-Coordinate Bezier::get_point(float t)
+/**
+ * Gets a point of the bezier curve based on 4 control points.
+ */
+Coordinate Bezier::get_point(float t, int i)
 {
     auto p = world_coordinate();
-    auto x = bezier(t, p[0].x(), p[1].x(), p[2].x(), p[3].x());
-    auto y = bezier(t, p[0].y(), p[1].y(), p[2].y(), p[3].y());
+    auto x = bezier(t, p[i].x(), p[i + 1].x(), p[i + 2].x(), p[i + 3].x());
+    auto y = bezier(t, p[i].y(), p[i + 1].y(), p[i + 2].y(), p[i + 3].y());
     return Coordinate(x, y);
 }
 
+/**
+ * Applies the Bezier polynomial to find the coordinate of a curve.
+ */
 float Bezier::bezier(float t, float p1n, float p2n, float p3n, float p4n)
 {
     float t3 = pow(t, 3);
     float t2 = pow(t, 2);
 
-    return (p1n * (-1 * t3 + 3 * t2 - 3 * t + 1)) + 
-           (p2n * (3 * t3 - 6 * t2 + 3 * t)) +
-           (p3n * (-3 * t3 + 3 * t2)) +
-           (p4n * t3);
+    return (t3 * (-1 * p1n + 3 * p2n - 3 * p3n + p4n)) + 
+           (t2 * (3 * p1n - 6 * p2n + 3 * p3n)) +
+           (t * (-3 * p1n + 3 * p2n)) +
+           (p1n);
 }
 
-Coordinate Spline::get_point(float t)
+/**
+ * Gets a point of the B-Spline curve based on 4 control points.
+ */
+Coordinate Spline::get_point(float t, int i)
 {
     auto p = world_coordinate();
-    auto x = spline(t, p[0].x(), p[1].x(), p[2].x(), p[3].x());
-    auto y = spline(t, p[0].y(), p[1].y(), p[2].y(), p[3].y());
+    auto x = spline(t, p[i].x(), p[i + 1].x(), p[i + 2].x(), p[i + 3].x());
+    auto y = spline(t, p[i].y(), p[i + 1].y(), p[i + 2].y(), p[i + 3].y());
     return Coordinate(x, y);
 }
 
+/**
+ * Applies the B-Spline polynomial to find the coordinate of a curve.
+ */
 float Spline::spline(float t, float p1n, float p2n, float p3n, float p4n)
 {
-    /* TODO */
     float t3 = pow(t, 3);
     float t2 = pow(t, 2);
     
-    return ((p1n * (-1 * t3 + 3 * t2 - 3 * t + 1)) + 
-           (p2n * (3 * t3 - 6 * t2 + 3 * t)) +
-           (p3n * (-3 * t3 + 3 * t)) +
-           (p4n * (t3 + 4 * t2 + t))) / 6;
+    return ((t3 * (-1 * p1n + 3 * p2n - 3 * p3n + p4n)) + 
+           (t2 * (3 * p1n - 6 * p2n + 3 * p3n)) +
+           (t * (-3 * p1n + 3 * p3n)) +
+           (1 * (p1n + 4 * p2n + p3n))) / 6;
 }
