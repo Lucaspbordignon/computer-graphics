@@ -10,7 +10,8 @@ enum OBJECT_TYPE
     LINE,
     POLYGON,
     POINT,
-    CURVE
+    CURVE,
+    OBJECT_3D
 };
 
 enum COORDINATE_TYPE
@@ -37,16 +38,18 @@ class Coordinate
 {
     public:
         Coordinate() {};
-        Coordinate(float x, float y):
+        Coordinate(float x, float y, float z = 0):
             _x(x),
-            _y(y) {}
+            _y(y),
+            _z(z) {}
         virtual ~Coordinate() {};
 
         float x() {return _x;}
         float y() {return _y;}
+        float z() {return _z;}
 
     private:
-        float _x, _y;
+        float _x, _y, _z;
 };
 
 class Object
@@ -57,7 +60,7 @@ class Object
             _name(name),
             _type(type) {}
         virtual ~Object() {};
-        virtual void add_coordinates(float x, float y, COORDINATE_TYPE type);
+        virtual void add_coordinates(float x, float y, float z=0, COORDINATE_TYPE type=WORLD);
         virtual void add_coordinates(Coordinate coord, COORDINATE_TYPE type);
         virtual void add_coordinates(std::vector<Coordinate>, COORDINATE_TYPE type);
         Coordinate center_point();
@@ -78,25 +81,40 @@ class Object
 class Line: public Object
 {
     public:
-        Line(std::string name, OBJECT_TYPE type):
-            Object(name, type) {}
+        Line(std::string name):
+            Object(name, LINE) {}
         ~Line() {}
 };
 
 class Polygon: public Object
 {
     public:
-        Polygon(std::string name, OBJECT_TYPE type):
-            Object(name, type) {}
+        Polygon(std::string name):
+            Object(name, POLYGON) {}
         ~Polygon() {}
 };
 
 class Point: public Object
 {
     public:
-        Point(std::string name, OBJECT_TYPE type):
-            Object(name, type) {}
+        Point(std::string name):
+            Object(name, POINT) {}
         ~Point() {}
+};
+
+class Object_3d: public Object
+{
+    public:
+        Object_3d(std:string name):
+            Object(name, OBJECT_3D) {}
+        ~Object_3d() {}
+
+        std::vector<Line*> generate_segments();
+        std::vector<Line*> get_segments();
+
+    public:
+        std::vector<Line*> _segments;
+    
 };
 
 class Curve: public Object

@@ -55,7 +55,7 @@ Point* Clipper::clip_2d_point(Point* point)
        if(coord.y() >= _window.get_y_min() && coord.y() <= _window.get_y_max())
            return point;
 
-   return (new Point(point->name(), POINT));
+   return (new Point(point->name()));
 }
 
 /**
@@ -99,7 +99,7 @@ Curve* Clipper::clip_2d_curve(Curve* curve)
  */
 Line* Clipper::cohen_sutherland(Line* line)
 {
-    Line* clipped = new Line(line->name(), LINE);
+    Line* clipped = new Line(line->name());
     clipped->add_coordinates(line->world_coordinate()[0], WORLD);
     clipped->add_coordinates(line->world_coordinate()[1], WORLD);
 
@@ -116,7 +116,7 @@ Line* Clipper::cohen_sutherland(Line* line)
         auto region_p2 = get_region_code(clipped->world_coordinate()[1]);
 
         if ((region_p1 & region_p2) != 0) {
-            return new Line(line->name(), LINE);
+            return new Line(line->name());
         } else if (region_p1 == 0 && region_p2 == 0) {
             return clipped;
         } else {
@@ -159,7 +159,7 @@ Line* Clipper::cohen_sutherland(Line* line)
  */
 Line* Clipper::liang_barsky(Line* line)
 {
-    auto clipped = new Line(line->name(), LINE);
+    auto clipped = new Line(line->name());
     auto coord_1 = line->world_coordinate()[0];
     auto coord_2 = line->world_coordinate()[1];
     auto r_zeta_1 = std::vector<float>();
@@ -262,7 +262,7 @@ Polygon* Clipper::sutherland_hodgman(Polygon* polygon)
             if (&p1 == &p2) {
                 continue;
             }
-            auto line = new Line("Clipping_Line", LINE);
+            auto line = new Line("Clipping_Line");
             line->add_coordinates(p1, WORLD);
             line->add_coordinates(p2, WORLD);
 
@@ -278,7 +278,7 @@ Polygon* Clipper::sutherland_hodgman(Polygon* polygon)
         }
     }
 
-    Polygon* clipped = new Polygon(polygon->name(), POLYGON);
+    Polygon* clipped = new Polygon(polygon->name());
 
     if (!output.empty()) {
         clipped->add_coordinates(output, WORLD);

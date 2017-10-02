@@ -119,7 +119,7 @@ extern "C" {
     void add_line(std::string name)
     {
         /* Inserts a line to the display file */
-        auto line = new Line(name, LINE);
+        auto line = new Line(name);
         line->add_coordinates(_coordinates_storage, WORLD);
         _display_file.push_back(line);
 
@@ -134,7 +134,7 @@ extern "C" {
     void add_polygon(std::string name)
     {
         /* Inserts a polygon to the display file */
-        auto polygon = new Polygon(name, POLYGON);
+        auto polygon = new Polygon(name);
         polygon->add_coordinates(_coordinates_storage, WORLD);
         _display_file.push_back(polygon);
         
@@ -149,7 +149,7 @@ extern "C" {
     void add_point(std::string name)
     {
         /* Inserts a point to the display file */
-        auto point = new Point(name, POINT);
+        auto point = new Point(name);
         point->add_coordinates(_coordinates_storage[0], WORLD);
         _display_file.push_back(point);
 

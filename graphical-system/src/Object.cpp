@@ -1,6 +1,6 @@
 #include "Object.hpp"
 
-void Object::add_coordinates(float x, float y, COORDINATE_TYPE type)
+void Object::add_coordinates(float x, float y, float z, COORDINATE_TYPE type)
 {
     if(type == WINDOW)
         return _window_coordinates.push_back(Coordinate(x, y));
@@ -34,12 +34,30 @@ Coordinate Object::center_point()
     auto n = _world_coordinates.size();
     float sum_x = 0;
     float sum_y = 0;
+    float sum_z = 0;
 
     for (auto i = 0u; i < n; ++i) {
         sum_x += _world_coordinates[i].x();
         sum_y += _world_coordinates[i].y();
+        sum_z += _world_coordinates[i].z();
     }
-    return Coordinate((sum_x / n), (sum_y / n));
+    return Coordinate((sum_x / n), (sum_y / n), (sum_z / n));
+}
+
+/**
+ * Return the line segments of a 3D object (mesh model) already generated.
+ */
+std::vector<Line*> Object_3d::get_segments()
+{
+    return _segments;
+}
+
+/**
+ * Generates the line segments of a 3D object (mesh model).
+ */
+std::vector<Line*> Object_3d::generate_segments()
+{
+    /* TODO */
 }
 
 /**
@@ -72,7 +90,7 @@ std::vector<Line*> Curve::generate_segments()
             Coordinate p1 = get_point(t, index);
             Coordinate p2 = get_point(t + _step, index);
 
-            auto line = new Line("Curve segment", LINE);
+            auto line = new Line("Curve segment");
             line->add_coordinates({p1, p2}, WORLD);
             segments.push_back(line);
         }
