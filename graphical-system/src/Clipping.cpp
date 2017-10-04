@@ -41,6 +41,12 @@ void Clipper::apply_clipping(Frame wind, DisplayFile& original_df, DisplayFile& 
                 clipped.push_back(clip_2d_curve(curve));
                 break;
             }
+            case OBJECT_3D:
+            {
+                Object* obj = (*i);
+                Object_3d* object = (Object_3d*) obj;
+                clipped.push_back(object);
+            }
         }
 }
 

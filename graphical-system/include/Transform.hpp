@@ -126,6 +126,10 @@ void normalize_coordinates(Frame window, DisplayFile& objects)
         if (obj->type() == CURVE) {
             for(auto segment : ((Curve*)obj)->get_segments())
                 normalize(segment, normalization_mat);
+        
+        } else if (obj->type() == OBJECT_3D){
+            for(auto polygon : ((Object_3d*)obj)->get_faces())
+                normalize(polygon, normalization_mat);
         } else {
             normalize(obj, normalization_mat);
         }
