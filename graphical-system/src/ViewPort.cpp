@@ -55,6 +55,9 @@ void ViewPort::draw_object(Object* object, cairo_t* cr)
         case CURVE:
             draw_curve((Curve*)object, cr);
             break;
+        case OBJECT_3D:
+            draw_3d_object((Object_3d*)object, cr);
+            break;
     }
 }
 
@@ -135,6 +138,15 @@ void ViewPort::draw_curve(Curve* object, cairo_t* cr)
     for (Line* line : object->get_segments()) {
         draw_line(line, cr);
     }
+}
+
+/**
+ * Draws a a 3D object based on the mesh stored at the object.
+ */
+void ViewPort::draw_3d_object(Object_3d* object, cairo_t* cr)
+{
+    for (Polygon* face : object->get_faces())
+        draw_polygon(face, cr);
 }
 
 /**

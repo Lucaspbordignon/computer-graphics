@@ -8,7 +8,7 @@
 #include "ViewPort.hpp"
 #include "Transform.hpp"
 #include "Clipping.hpp"
-#include <iostream>
+#include "ObjectReader.hpp"
 
 #define GUI_FILE "graphical_system.glade"
 
@@ -193,6 +193,27 @@ extern "C" {
         GtkTreeIter it;
         gtk_list_store_append(_name_list, &it);
         gtk_list_store_set(_name_list, &it, 0, aux, 1, "B-SPLINE", -1);
+    }
+
+    /* TEST */
+    void load_obj_file(GtkButton* button, GtkEntry* filename_entry)
+    {
+        auto filename = gtk_entry_get_text(filename_entry);
+        if (filename[0] == '\0') {
+            print("Filename is not valid.\n");
+            return;
+        }
+
+        auto read_obj = new Object_3d(filename);
+        read_obj->add_faces(read_obj_file(filename));
+        _display_file.push_back(read_obj);
+        
+        /* Add the element to the list store */
+        char aux[1024];
+        strcpy(aux, filename);
+        GtkTreeIter it;
+        gtk_list_store_append(_name_list, &it);
+        gtk_list_store_set(_name_list, &it, 0, aux, 1, "3D-OBJECT", -1);
     }
 
     void create_object_button(GtkButton* button, GtkEntry* obj_name)

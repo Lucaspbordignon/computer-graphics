@@ -105,15 +105,15 @@ class Point: public Object
 class Object_3d: public Object
 {
     public:
-        Object_3d(std:string name):
+        Object_3d(std::string name):
             Object(name, OBJECT_3D) {}
         ~Object_3d() {}
 
-        std::vector<Line*> generate_segments();
-        std::vector<Line*> get_segments();
+        std::vector<Polygon*> get_faces();
+        void add_faces(std::vector<Polygon*>);
 
     public:
-        std::vector<Line*> _segments;
+        std::vector<Polygon*> _faces;
     
 };
 

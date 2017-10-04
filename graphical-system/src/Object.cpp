@@ -47,17 +47,17 @@ Coordinate Object::center_point()
 /**
  * Return the line segments of a 3D object (mesh model) already generated.
  */
-std::vector<Line*> Object_3d::get_segments()
+std::vector<Polygon*> Object_3d::get_faces()
 {
-    return _segments;
+    return _faces;
 }
 
 /**
- * Generates the line segments of a 3D object (mesh model).
+ * Adds all the faces as polygons.
  */
-std::vector<Line*> Object_3d::generate_segments()
+void Object_3d::add_faces(std::vector<Polygon*> faces)
 {
-    /* TODO */
+    _faces = faces;
 }
 
 /**

@@ -30,6 +30,7 @@ class ViewPort
         void draw_polygon(Object* object, cairo_t* cr);
         void draw_point(Object* object, cairo_t* cr);
         void draw_curve(Curve* object, cairo_t* cr);
+        void draw_3d_object(Object_3d* object, cairo_t* cr);
         Frame _window;
         float _x_min, _y_min, _x_max, _y_max, _window_ratio;
 };
