@@ -91,6 +91,19 @@ extern "C" {
         return TRUE;
     }
 
+    void parallel_projection()
+    {
+        auto window = _viewport->window_ptr();
+
+        translation_2d_object(window, -window->x_center(), -window->y_center());
+        window->rotate(-window->angle()); 
+         
+        _clipper.apply_clipping(_viewport->window(), 
+                                _display_file, _clipped_objects, clip_algorithm);
+        normalize_coordinates(_viewport->window(), _clipped_objects);
+        translation_2d_object(window, window->x_center(), window->y_center());
+    }
+
     gboolean draw(GtkWidget* widget, cairo_t* cr)
     {
         /* Redraw a cairo context */
@@ -195,7 +208,6 @@ extern "C" {
         gtk_list_store_set(_name_list, &it, 0, aux, 1, "B-SPLINE", -1);
     }
 
-    /* TEST */
     void load_obj_file(GtkButton* button, GtkEntry* filename_entry)
     {
         auto filename = gtk_entry_get_text(filename_entry);

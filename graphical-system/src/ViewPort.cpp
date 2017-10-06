@@ -66,8 +66,8 @@ void ViewPort::draw_object(Object* object, cairo_t* cr)
  */
 Coordinate ViewPort::viewport_transform(Coordinate& coord)
 {
-    auto width = _window.get_x_max() - _window.get_x_min();
-    auto height = _window.get_y_max() - _window.get_y_min();
+    auto width = (_x_max - _window_ratio) - (_x_min + _window_ratio);
+    auto height = (_y_max - _window_ratio) - (_y_min + _window_ratio);
 
     /* Normalized transformation */
     auto x_vp = ((coord.x() - (-1)) / (1 - (-1))) * width;
