@@ -49,7 +49,7 @@ std::vector<Polygon*> read_obj_file(const std::string &path) {
                        [](const std::string &str) { return std::stoi(str); });
 
                 for (auto i : face)
-                    poly->add_coordinates(vertices[i], WORLD);
+                    poly->add_coordinates(vertices[i-1], WORLD);
                 all_faces.push_back(poly);
 
             } else if (splitted[0] == "v") {
